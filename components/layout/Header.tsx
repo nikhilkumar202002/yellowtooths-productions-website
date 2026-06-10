@@ -1,16 +1,58 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import Container from "@/components/common/Container";
+import ServicesDropdown from "@/components/layout/ServicesDropdown";
 
 const Header = () => {
+  const pathname = usePathname();
+  const isHomePage = pathname === "/";
+  const [hasPassedHero, setHasPassedHero] = useState(false);
+  const isVisible = !isHomePage || hasPassedHero;
+
+  useEffect(() => {
+    if (!isHomePage) {
+      return;
+    }
+
+    const updateHeaderVisibility = () => {
+      const hero = document.getElementById("home-hero");
+      setHasPassedHero(Boolean(hero && hero.getBoundingClientRect().bottom <= 0));
+    };
+
+    const animationFrame = window.requestAnimationFrame(updateHeaderVisibility);
+    window.addEventListener("scroll", updateHeaderVisibility, {
+      passive: true,
+    });
+    window.addEventListener("resize", updateHeaderVisibility);
+
+    return () => {
+      window.cancelAnimationFrame(animationFrame);
+      window.removeEventListener("scroll", updateHeaderVisibility);
+      window.removeEventListener("resize", updateHeaderVisibility);
+    };
+  }, [isHomePage]);
+
   return (
-    <header className="w-full border-b border-white/15 bg-black">
+    <header
+      className={`z-50 w-full border-b border-white/15 bg-black transition-transform duration-300 ${
+        isHomePage
+          ? `fixed inset-x-0 top-0 ${
+              isVisible ? "translate-y-0" : "-translate-y-full"
+            }`
+          : "relative"
+      }`}
+      aria-hidden={isHomePage && !isVisible}
+    >
       <Container>
         <div className="flex h-[60px] items-stretch">
           <Link
             href="/"
             aria-label="Yellowtooths Productions home"
-            className="inline-flex min-w-0 flex-1 items-center pr-4 transition-opacity hover:opacity-80 sm:pr-6 lg:max-w-64 lg:pr-10"
+            className="inline-flex min-w-0 flex-1 items-center pr-4 transition-opacity hover:opacity-80 sm:pr-6 lg:max-w-48 lg:pr-6"
           >
             <Image
               src="/logo_full_size.svg"
@@ -29,7 +71,23 @@ const Header = () => {
             {[
               { href: "/", label: "Home" },
               { href: "/works", label: "Works" },
-              { href: "/services", label: "Service" },
+              { href: "/about", label: "About" },
+              { href: "/career", label: "Career" },
+            ]
+              .slice(0, 2)
+              .map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="font-description flex items-center px-5 text-xs font-medium uppercase tracking-[0.04em] text-white/60 transition-colors hover:text-white xl:px-4"
+                >
+                  {item.label}
+                </Link>
+              ))}
+
+            <ServicesDropdown />
+
+            {[
               { href: "/about", label: "About" },
               { href: "/career", label: "Career" },
             ].map((item) => (

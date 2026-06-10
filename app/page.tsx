@@ -1,3 +1,11 @@
+import FeaturedBentoGrid from "@/components/sections/FeaturedBentoGrid";
+import HeroBanner from "@/components/sections/HeroBanner";
+
 export default function Home() {
-  return <div className="min-h-[60vh] bg-black" />;
+  return (
+    <>
+      <HeroBanner />
+      <FeaturedBentoGrid />
+    </>
+  );
 }
