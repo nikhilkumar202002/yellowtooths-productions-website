@@ -68,6 +68,14 @@
   animation: videoFadeIn 600ms ease both;
 }
 
+.localVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .leftTall {
   grid-area: leftTall;
   align-self: stretch;

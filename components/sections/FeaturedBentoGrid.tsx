@@ -16,11 +16,10 @@ const imageGroups = [
     "/Images/mendiary.jpg.jpeg",
     "/Images/viscara.jpg.jpeg",
   ],
-  ["/Images/1.jpg", "/Images/2.jpg", "/Images/3.jpg"],
 ];
 
-const intervals = [4700, 6200, 5600, 7100];
-const delays = [900, 1800, 1200, 2300];
+const intervals = [4700, 6200, 5600];
+const delays = [900, 1800, 1200];
 const youtubeVideoIds = ["ZAVjO5GLFI4", "CLqWPaA_PJM"];
 const youtubePlaylist = youtubeVideoIds.join(",");
 
@@ -151,7 +150,6 @@ const FeaturedBentoGrid = () => {
   const imageOne = useRotatingImage(posterImages, intervals[0], delays[0]);
   const imageTwo = useRotatingImage(imageGroups[1], intervals[1], delays[1]);
   const imageThree = useRotatingImage(imageGroups[2], intervals[2], delays[2]);
-  const imageFour = useRotatingImage(imageGroups[3], intervals[3], delays[3]);
 
   return (
     <section className="border-b border-white/15 bg-black py-16 text-white sm:py-24">
@@ -196,19 +194,29 @@ const FeaturedBentoGrid = () => {
               />
             </Link>
 
-            <div
-              className={`${styles.card} ${styles.centerTop}`}
-              aria-hidden="true"
-            />
+            <div className={`${styles.card} ${styles.centerTop}`}>
+              <video
+                className={styles.localVideo}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                aria-label="Yellowtooths Global Academy of Artistry project"
+              >
+                <source src="/Videos/gaa-video.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
 
             <Link
               href="/works"
               className={`${styles.card} ${styles.centerMiddle}`}
-              aria-label="View featured UI design project"
+              aria-label="View featured website project"
             >
               <FeaturedImage
                 {...imageTwo}
-                alt="Yellowtooths featured UI design project"
+                alt="Yellowtooths featured website project"
               />
             </Link>
 
@@ -235,16 +243,20 @@ const FeaturedBentoGrid = () => {
               />
             </Link>
 
-            <Link
-              href="/works"
-              className={`${styles.card} ${styles.rightBottom}`}
-              aria-label="View Yellowtooths studio"
-            >
-              <FeaturedImage
-                {...imageFour}
-                alt="Yellowtooths production studio"
-              />
-            </Link>
+            <div className={`${styles.card} ${styles.rightBottom}`}>
+              <video
+                className={styles.localVideo}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                aria-label="Yellowtooths Thinkery project"
+              >
+                <source src="/Videos/thinkery-video.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
           </div>
         </div>
       </Container>

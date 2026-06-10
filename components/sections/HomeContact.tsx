@@ -158,7 +158,7 @@ const HomeContact = () => {
 
       <div className="relative z-10 border-t border-white/20">
         <iframe
-          src="https://www.google.com/maps/embed?pb=!1m26!1m12!1m3!1d1293.3446703536063!2d76.32827951057705!3d10.03068802134783!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m11!3e6!4m3!3m2!1d10.0310971!2d76.328486!4m5!1s0x3b080d00da9cf143%3A0x7d87036eb25d077d!2sYellowtooths%2C%20Ln-1%2C%20Kutty%20Sahib%20Layout%20Rd%2C%20near%20Model%20Engineering%20College%2C%20Thrikkakara%2C%20Edappally%2C%20Ernakulam%2C%20Kochi%2C%20Kerala%20682021!3m2!1d10.03096!2d76.3283321!5e0!3m2!1sen!2sin!4v1781090113173!5m2!1sen!2sin"
+          src="https://www.google.com/maps?q=Kerala%2C%20India&output=embed"
           title="Yellowtooths Productions location"
           className="block h-[360px] w-full border-0 grayscale sm:h-[440px]"
           loading="lazy"
