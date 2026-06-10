@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Roboto_Condensed, Space_Mono } from "next/font/google";
+import { Geist, Roboto_Condensed } from "next/font/google";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import "./globals.css";
@@ -7,12 +7,6 @@ import "./globals.css";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
-});
-
-const spaceMono = Space_Mono({
-  variable: "--font-space-mono",
-  subsets: ["latin"],
-  weight: ["400", "700"],
 });
 
 const robotoCondensed = Roboto_Condensed({
@@ -33,7 +27,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${spaceMono.variable} ${robotoCondensed.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${robotoCondensed.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-black text-white">
         <Header />

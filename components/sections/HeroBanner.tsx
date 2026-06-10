@@ -34,7 +34,7 @@ const HeroBanner = () => {
                   <li key={service}>
                     <Link
                       href="/services"
-                      className="font-heading inline-block text-[clamp(1.25rem,2vw,2rem)] uppercase text-white transition-colors hover:text-[#fec52d]"
+                      className="font-heading inline-block text-[clamp(1.25rem,2vw,2rem)] capitalize text-white transition-colors hover:text-[#fec52d]"
                     >
                       {service}
                     </Link>

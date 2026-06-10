@@ -9,7 +9,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
-  --font-heading: var(--font-space-mono);
+  --font-heading: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-description: var(--font-roboto-condensed);
 }
 
@@ -27,7 +27,8 @@ body {
 h1,
 h2,
 h3 {
-  font-family: var(--font-space-mono), monospace;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  text-transform: capitalize;
 }
 
 p {
