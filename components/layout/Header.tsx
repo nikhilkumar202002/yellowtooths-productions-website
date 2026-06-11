@@ -55,10 +55,10 @@ const Header = () => {
             className="inline-flex min-w-0 flex-1 items-center pr-4 transition-opacity hover:opacity-80 sm:pr-6 lg:max-w-48 lg:pr-6"
           >
             <Image
-              src="/logo_full_size.svg"
+              src="/yellowtooths-wordmark.svg"
               alt="Yellowtooths"
-              width={120}
-              height={25}
+              width={196}
+              height={31}
               priority
               className="h-auto w-28 sm:w-[130px]"
             />
@@ -79,7 +79,7 @@ const Header = () => {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="font-description flex items-center px-5 text-xs font-medium uppercase tracking-[0.04em] text-white/60 transition-colors hover:text-white xl:px-4"
+                  className="font-description flex items-center px-5 text-xs font-medium capitalize tracking-[0.04em] text-white/60 transition-colors hover:text-white xl:px-4"
                 >
                   {item.label}
                 </Link>
@@ -94,7 +94,7 @@ const Header = () => {
               <Link
                 key={item.href}
                 href={item.href}
-                className="font-description flex items-center px-5 text-xs font-medium uppercase tracking-[0.04em] text-white/60 transition-colors hover:text-white xl:px-4"
+                className="font-description flex items-center px-5 text-xs font-medium capitalize tracking-[0.04em] text-white/60 transition-colors hover:text-white xl:px-4"
               >
                 {item.label}
               </Link>
@@ -113,8 +113,8 @@ const Header = () => {
               id="site-search"
               name="q"
               type="search"
-              placeholder="SEARCH"
-              className="site-search font-description h-full w-full bg-transparent px-5 text-xs uppercase tracking-[0.04em] text-white outline-none placeholder:text-white/45 focus:bg-white/[0.04] lg:px-8"
+              placeholder="Search"
+              className="site-search font-description h-full w-full bg-transparent px-5 text-xs capitalize tracking-[0.04em] text-white outline-none placeholder:text-white/45 focus:bg-white/[0.04] lg:px-8"
             />
           </form>
 
@@ -147,7 +147,7 @@ const Header = () => {
 
           <Link
             href="/contact"
-            className="font-description group flex shrink-0 items-center justify-center gap-2 border-l border-white/15 px-4 text-xs font-medium uppercase tracking-[0.04em] text-white/60 transition-colors hover:bg-[#fec52d] hover:text-black sm:gap-3 sm:px-7 lg:min-w-52"
+            className="font-description group flex shrink-0 items-center justify-center gap-2 border-l border-white/15 px-4 text-xs font-medium capitalize tracking-[0.04em] text-white/60 transition-colors hover:bg-[#fec52d] hover:text-black sm:gap-3 sm:px-7 lg:min-w-52"
           >
             <span className="hidden sm:inline">Contact us</span>
             <svg

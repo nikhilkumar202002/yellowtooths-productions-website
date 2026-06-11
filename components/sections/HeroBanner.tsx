@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState, type PointerEvent } from "react";
+import { useEffect, useRef, useState, type PointerEvent } from "react";
 import Container from "@/components/common/Container";
+import styles from "./HeroBanner.module.css";
 
 const services = [
   {
@@ -62,14 +63,26 @@ type DragState = {
 const HeroBanner = () => {
   const [positions, setPositions] = useState<Record<string, Position>>({});
   const [draggedService, setDraggedService] = useState<string | null>(null);
+  const [pausedServices, setPausedServices] = useState<Set<string>>(
+    () => new Set(),
+  );
   const dragState = useRef<DragState | null>(null);
   const suppressClick = useRef<string | null>(null);
+  const resumeTimers = useRef<Map<string, number>>(new Map());
+
+  useEffect(() => {
+    const timers = resumeTimers.current;
+
+    return () => {
+      timers.forEach((timer) => window.clearTimeout(timer));
+    };
+  }, []);
 
   const handlePointerDown = (
-    event: PointerEvent<HTMLLIElement>,
+    event: PointerEvent<HTMLDivElement>,
     href: string,
   ) => {
-    const container = event.currentTarget.parentElement;
+    const container = event.currentTarget.closest("ul");
     if (!container) return;
 
     const initialPosition = positions[href] ?? { x: 0, y: 0 };
@@ -84,10 +97,9 @@ const HeroBanner = () => {
       containerBounds: container.getBoundingClientRect(),
       hasMoved: false,
     };
-
   };
 
-  const handlePointerMove = (event: PointerEvent<HTMLLIElement>) => {
+  const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
     const drag = dragState.current;
     if (!drag || drag.pointerId !== event.pointerId) return;
 
@@ -98,6 +110,17 @@ const HeroBanner = () => {
       drag.hasMoved = true;
       event.currentTarget.setPointerCapture(event.pointerId);
       setDraggedService(drag.href);
+      setPausedServices((current) => {
+        const next = new Set(current);
+        next.add(drag.href);
+        return next;
+      });
+
+      const resumeTimer = resumeTimers.current.get(drag.href);
+      if (resumeTimer) {
+        window.clearTimeout(resumeTimer);
+        resumeTimers.current.delete(drag.href);
+      }
     }
 
     if (!drag.hasMoved) return;
@@ -120,7 +143,7 @@ const HeroBanner = () => {
     }));
   };
 
-  const finishDrag = (event: PointerEvent<HTMLLIElement>) => {
+  const finishDrag = (event: PointerEvent<HTMLDivElement>) => {
     const drag = dragState.current;
     if (!drag || drag.pointerId !== event.pointerId) return;
 
@@ -133,6 +156,17 @@ const HeroBanner = () => {
       window.setTimeout(() => {
         if (suppressClick.current === drag.href) suppressClick.current = null;
       }, 0);
+
+      const resumeTimer = window.setTimeout(() => {
+        setPausedServices((current) => {
+          const next = new Set(current);
+          next.delete(drag.href);
+          return next;
+        });
+        resumeTimers.current.delete(drag.href);
+      }, 3000);
+
+      resumeTimers.current.set(drag.href, resumeTimer);
     }
 
     dragState.current = null;
@@ -140,12 +174,29 @@ const HeroBanner = () => {
   };
 
   return (
-    <section id="home-hero" className="border-b border-white/15 bg-black">
-      <Container>
-        <div className="grid min-h-[720px] lg:h-[720px] lg:grid-cols-2">
-          <div className="relative h-[720px] min-w-0 py-10 pr-0 lg:pr-14">
+    <section
+      id="home-hero"
+      className="relative overflow-hidden border-b border-white/15 bg-black"
+    >
+      <video
+        className="absolute inset-0 size-full object-cover"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        aria-hidden="true"
+      >
+        <source src="/Videos/hero-banner-video.mp4" type="video/mp4" />
+      </video>
+      <div className="absolute inset-0 bg-black/94" aria-hidden="true" />
+      <div className={styles.grainOverlay} aria-hidden="true" />
+
+      <Container className="relative z-10">
+        <div className="grid min-h-[760px] lg:h-[760px] lg:grid-cols-2">
+          <div className="relative h-[760px] min-w-0 py-10 pr-0 lg:pr-14">
             <Image
-              src="/logo_full_size.svg"
+              src="/yellowtooths-wordmark.svg"
               alt="Yellowtooths Productions"
               width={196}
               height={31}
@@ -167,40 +218,50 @@ const HeroBanner = () => {
                 {services.map((service) => (
                   <li
                     key={service.href}
-                    className={`absolute cursor-grab touch-none select-none ${
-                        draggedService === service.href
-                          ? "z-10 cursor-grabbing scale-110 drop-shadow-[0_0_14px_rgba(254,197,45,0.45)]"
-                          : "transition-transform duration-500 ease-out"
-                      } ${service.position}`}
-                    style={{
-                      transform: `translate3d(${positions[service.href]?.x ?? 0}px, ${
-                        positions[service.href]?.y ?? 0
-                      }px, 0)`,
-                    }}
-                    onPointerDown={(event) =>
-                      handlePointerDown(event, service.href)
-                    }
-                    onPointerMove={handlePointerMove}
-                    onPointerUp={finishDrag}
-                    onPointerCancel={finishDrag}
+                    className={`absolute ${styles.serviceDrift} ${
+                      pausedServices.has(service.href)
+                        ? styles.serviceDriftPaused
+                        : ""
+                    } ${
+                      draggedService === service.href ? "z-10" : ""
+                    } ${service.position}`}
                   >
-                    <Link
-                      href={service.href}
-                      draggable={false}
-                      onClick={(event) => {
-                        if (suppressClick.current === service.href) {
-                          event.preventDefault();
-                          suppressClick.current = null;
-                        }
-                      }}
-                      className={`font-heading inline-block whitespace-nowrap text-[clamp(1.05rem,4.3vw,1.6rem)] capitalize transition-colors hover:text-[#fec52d] focus-visible:text-[#fec52d] focus-visible:outline-none ${
+                    <div
+                      className={`cursor-grab touch-none select-none ${
                         draggedService === service.href
-                          ? "text-[#fec52d]"
-                          : "text-white"
+                          ? "cursor-grabbing scale-110 drop-shadow-[0_0_14px_rgba(254,197,45,0.45)]"
+                          : "transition-transform duration-500 ease-out"
                       }`}
+                      style={{
+                        transform: `translate3d(${
+                          positions[service.href]?.x ?? 0
+                        }px, ${positions[service.href]?.y ?? 0}px, 0)`,
+                      }}
+                      onPointerDown={(event) =>
+                        handlePointerDown(event, service.href)
+                      }
+                      onPointerMove={handlePointerMove}
+                      onPointerUp={finishDrag}
+                      onPointerCancel={finishDrag}
                     >
-                      {service.label}
-                    </Link>
+                      <Link
+                        href={service.href}
+                        draggable={false}
+                        onClick={(event) => {
+                          if (suppressClick.current === service.href) {
+                            event.preventDefault();
+                            suppressClick.current = null;
+                          }
+                        }}
+                        className={`font-heading inline-block whitespace-nowrap text-[clamp(1.05rem,4.3vw,1.6rem)] capitalize transition-colors hover:text-[#fec52d] focus-visible:text-[#fec52d] focus-visible:outline-none ${
+                          draggedService === service.href
+                            ? "text-[#fec52d]"
+                            : "text-white"
+                        }`}
+                      >
+                        {service.label}
+                      </Link>
+                    </div>
                   </li>
                 ))}
               </ul>

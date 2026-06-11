@@ -29,7 +29,7 @@ const Footer = () => {
               className="inline-flex w-fit transition-opacity hover:opacity-75"
             >
               <Image
-                src="/logo_full_size.svg"
+                src="/yellowtooths-wordmark.svg"
                 alt="Yellowtooths"
                 width={196}
                 height={31}

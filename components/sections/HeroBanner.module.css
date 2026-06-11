@@ -1,0 +1,146 @@
+.grainOverlay {
+  position: absolute;
+  inset: -25%;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.9'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 180px 180px;
+  mix-blend-mode: soft-light;
+  opacity: 0.22;
+  animation: grainShift 0.5s steps(6) infinite;
+  will-change: transform;
+}
+
+.serviceDrift {
+  --drift-x-1: 44px;
+  --drift-y-1: -22px;
+  --drift-x-2: 20px;
+  --drift-y-2: 34px;
+  --drift-x-3: 0px;
+  --drift-y-3: 18px;
+  animation: serviceDrift 28s linear infinite;
+  will-change: transform;
+}
+
+.serviceDrift:nth-child(2) {
+  --drift-x-1: -42px;
+  --drift-y-1: 28px;
+  --drift-x-2: 24px;
+  --drift-y-2: 38px;
+  --drift-x-3: 50px;
+  --drift-y-3: -20px;
+  animation-duration: 32s;
+  animation-delay: -8s;
+}
+
+.serviceDrift:nth-child(3) {
+  --drift-x-1: 52px;
+  --drift-y-1: 32px;
+  --drift-x-2: 26px;
+  --drift-y-2: -24px;
+  --drift-x-3: 70px;
+  --drift-y-3: -8px;
+  animation-duration: 26s;
+  animation-delay: -14s;
+}
+
+.serviceDrift:nth-child(4) {
+  --drift-x-1: -48px;
+  --drift-y-1: -18px;
+  --drift-x-2: -20px;
+  --drift-y-2: 36px;
+  --drift-x-3: -64px;
+  --drift-y-3: 24px;
+  animation-duration: 35s;
+  animation-delay: -20s;
+}
+
+.serviceDrift:nth-child(5) {
+  --drift-x-1: 42px;
+  --drift-y-1: -30px;
+  --drift-x-2: -42px;
+  --drift-y-2: -12px;
+  --drift-x-3: 18px;
+  --drift-y-3: 28px;
+  animation-duration: 30s;
+  animation-delay: -11s;
+}
+
+.serviceDrift:nth-child(6) {
+  --drift-x-1: 46px;
+  --drift-y-1: -26px;
+  --drift-x-2: 78px;
+  --drift-y-2: -58px;
+  --drift-x-3: 22px;
+  --drift-y-3: -74px;
+  animation-duration: 34s;
+  animation-delay: -18s;
+}
+
+.serviceDrift:nth-child(7) {
+  --drift-x-1: -44px;
+  --drift-y-1: -30px;
+  --drift-x-2: -74px;
+  --drift-y-2: -62px;
+  --drift-x-3: -20px;
+  --drift-y-3: -78px;
+  animation-duration: 29s;
+  animation-delay: -24s;
+}
+
+.serviceDriftPaused {
+  animation-play-state: paused;
+}
+
+@keyframes serviceDrift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  25% {
+    transform: translate3d(var(--drift-x-1), var(--drift-y-1), 0);
+  }
+
+  50% {
+    transform: translate3d(var(--drift-x-2), var(--drift-y-2), 0);
+  }
+
+  75% {
+    transform: translate3d(var(--drift-x-3), var(--drift-y-3), 0);
+  }
+}
+
+@keyframes grainShift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  17% {
+    transform: translate3d(-5%, -10%, 0);
+  }
+
+  33% {
+    transform: translate3d(3%, -15%, 0);
+  }
+
+  50% {
+    transform: translate3d(12%, 9%, 0);
+  }
+
+  67% {
+    transform: translate3d(9%, 4%, 0);
+  }
+
+  83% {
+    transform: translate3d(-1%, 7%, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grainOverlay,
+  .serviceDrift {
+    animation: none;
+  }
+}

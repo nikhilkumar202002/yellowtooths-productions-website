@@ -51,7 +51,7 @@ const useRotatingImage = (
       window.clearTimeout(timeoutId);
       if (intervalId) clearInterval(intervalId);
     };
-  }, [delay, images.length, interval]);
+  }, [delay, images, interval]);
 
   const previousIndex = images && images.length ? (index - 1 + images.length) % images.length : 0;
 
@@ -200,9 +200,9 @@ const FeaturedBentoGrid = () => {
         <div className={styles.grid}>
           <div className={styles.leftGrid}>
             <Link
-              href="/works"
+              href="/services/film-poster"
               className={`${styles.card} ${styles.leftTall}`}
-              aria-label="View featured film poster"
+              aria-label="View Film Poster service"
             >
               <FeaturedImage
                 {...imageOne}
@@ -226,7 +226,11 @@ const FeaturedBentoGrid = () => {
               />
             </Link>
 
-            <div className={`${styles.card} ${styles.centerTop}`}>
+            <Link
+              href="/services/global-academy-of-artistry"
+              className={`${styles.card} ${styles.centerTop}`}
+              aria-label="View Global Academy of Artistry service"
+            >
               <video
                 className={styles.localVideo}
                 autoPlay
@@ -245,12 +249,12 @@ const FeaturedBentoGrid = () => {
                 eyebrow="Testimonials / 2025"
                 detail="Global Academy of Artistry"
               />
-            </div>
+            </Link>
 
             <Link
-              href="/works"
+              href="/services/technology-experience-design"
               className={`${styles.card} ${styles.centerMiddle}`}
-              aria-label="View featured website project"
+              aria-label="View Technology and Experience Design service"
             >
               <FeaturedImage
                 {...imageTwo}
@@ -262,7 +266,11 @@ const FeaturedBentoGrid = () => {
               />
             </Link>
 
-            <div className={`${styles.card} ${styles.bottomVideo}`}>
+            <Link
+              href="/services/video-production"
+              className={`${styles.card} ${styles.bottomVideo}`}
+              aria-label="View Video Production service"
+            >
               <video
                 className={styles.localVideo}
                 autoPlay
@@ -294,14 +302,14 @@ const FeaturedBentoGrid = () => {
                 }
                 detail="Official Motion Space."
               />
-            </div>
+            </Link>
           </div>
 
           <div className={styles.rightGrid}>
             <Link
-              href="/works"
+              href="/services/branding"
               className={`${styles.card} ${styles.rightTop}`}
-              aria-label="View featured branding project"
+              aria-label="View Branding service"
             >
               <FeaturedImage
                 {...imageThree}
@@ -332,7 +340,11 @@ const FeaturedBentoGrid = () => {
               />
             </Link>
 
-            <div className={`${styles.card} ${styles.rightBottom}`}>
+            <Link
+              href="/services/thinkery"
+              className={`${styles.card} ${styles.rightBottom}`}
+              aria-label="View Thinkery service"
+            >
               <video
                 className={styles.localVideo}
                 autoPlay
@@ -358,7 +370,7 @@ const FeaturedBentoGrid = () => {
                   </>
                 }
               />
-            </div>
+            </Link>
           </div>
         </div>
       </Container>
