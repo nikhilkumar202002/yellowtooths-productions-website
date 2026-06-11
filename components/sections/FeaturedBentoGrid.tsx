@@ -3,12 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { getAllFilmPosterDesigns } from "@/api/axios";
+import { getAllFilmPosterDesigns, type FilmPosterDesign } from "@/api/axios";
 import Container from "@/components/common/Container";
 import styles from "./FeaturedBentoGrid.module.css";
 
 const imageGroups = [
-  ["/Images/1.jpg", "/Images/2.jpg", "/Images/3.jpg"],
+  ["/Images/2.jpg", "/Images/3.jpg"],
   ["/Images/tech-mockup.jpg"],
   [
     "/Images/fasion opticals.jpg.jpeg",
@@ -37,8 +37,8 @@ const useRotatingImage = (
 ) => {
   const [index, setIndex] = useState(0);
   const [hasAdvanced, setHasAdvanced] = useState(false);
-
   useEffect(() => {
+    if (!images || images.length === 0) return;
     let intervalId: ReturnType<typeof setInterval> | undefined;
     const timeoutId = window.setTimeout(() => {
       setHasAdvanced(true);
@@ -55,12 +55,12 @@ const useRotatingImage = (
     };
   }, [delay, images.length, interval]);
 
-  const previousIndex = (index - 1 + images.length) % images.length;
+  const previousIndex = images && images.length ? (index - 1 + images.length) % images.length : 0;
 
   return {
-    src: images[index],
-    previousSrc: hasAdvanced ? images[previousIndex] : null,
-    index,
+    src: images && images.length ? images[index] : "",
+    previousSrc: hasAdvanced && images && images.length ? images[previousIndex] : null,
+    index: images && images.length ? index : 0,
     animate: hasAdvanced,
   };
 };
@@ -72,43 +72,44 @@ const FeaturedImage = ({
   alt,
   animate,
 }: {
-  src: string;
+  src?: string;
   previousSrc: string | null;
   index: number;
   alt: string;
   animate: boolean;
-}) => (
-  <div className={styles.imageStage}>
-    {previousSrc && (
+}) => {
+  if (!src) return <div className={styles.imageStage} />;
+
+  return (
+    <div className={styles.imageStage}>
+      {previousSrc && (
+        <Image
+          key={`previous-${previousSrc}-${index}`}
+          src={previousSrc}
+          alt=""
+          fill
+          unoptimized
+          sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 40vw"
+          className={`${styles.image} ${styles.imageOutgoing}`}
+        />
+      )}
       <Image
-        key={`previous-${previousSrc}-${index}`}
-        src={previousSrc}
-        alt=""
+        key={`current-${src}-${index}`}
+        src={src}
+        alt={alt}
         fill
         unoptimized
         sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 40vw"
-        className={`${styles.image} ${styles.imageOutgoing}`}
+        className={`${styles.image} ${animate ? styles.imageIncoming : ""}`}
       />
-    )}
-    <Image
-      key={`current-${src}-${index}`}
-      src={src}
-      alt={alt}
-      fill
-      unoptimized
-      sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 40vw"
-      className={`${styles.image} ${animate ? styles.imageIncoming : ""}`}
-    />
-  </div>
-);
+    </div>
+  );
+};
 
 const FeaturedBentoGrid = () => {
-  const [posterImages, setPosterImages] = useState(imageGroups[0]);
+  const [posterImages, setPosterImages] = useState<string[]>([]);
   const [posterNames, setPosterNames] = useState<string[]>([]);
 
-  useEffect(() => {
-    preloadImages(imageGroups.flat());
-  }, []);
 
   useEffect(() => {
     let isActive = true;
@@ -117,8 +118,11 @@ const FeaturedBentoGrid = () => {
       .then((posters) => {
         if (!isActive) return;
 
+        const getPosterImage = (poster: FilmPosterDesign) =>
+          poster.main_image || poster.images?.[0]?.file_path || null;
+
         const postersWithImages = posters
-          .filter((poster) => poster.main_image)
+          .filter((poster) => getPosterImage(poster))
           .sort(
             (first, second) =>
               (second.position_number ?? second.id) -
@@ -127,15 +131,13 @@ const FeaturedBentoGrid = () => {
           .slice(0, 5);
 
         if (postersWithImages.length > 0) {
-          const latestPosterImages = postersWithImages.map(
-            (poster) => poster.main_image as string,
+          const latestPosterImages = postersWithImages.map((poster) =>
+            getPosterImage(poster) as string,
           );
 
           preloadImages(latestPosterImages);
           setPosterImages(latestPosterImages);
-          setPosterNames(
-            postersWithImages.map((poster) => poster.film_name),
-          );
+          setPosterNames(postersWithImages.map((poster) => poster.film_name));
         }
       })
       .catch(() => {

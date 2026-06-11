@@ -118,19 +118,12 @@ const FilmPosterPage = () => {
       </header>
 
       <section className="px-5 py-8 sm:px-8 lg:px-12 lg:py-12">
-        <div className="font-description mb-6 flex items-center justify-between border-b border-white/10 pb-4 text-xs uppercase tracking-[0.12em] text-white/40">
-          <span>Selected work</span>
-          {!isLoading && !hasError && <span>{filteredPosters.length} Posters</span>}
-        </div>
-
         {isLoading && (
           <div className="columns-1 gap-4 sm:columns-2 lg:columns-3">
             {Array.from({ length: 9 }, (_, index) => (
               <div
                 key={index}
-                className={`mb-4 animate-pulse break-inside-avoid rounded-2xl bg-white/10 ${
-                  index % 3 === 1 ? "aspect-[4/5]" : "aspect-[2/3]"
-                }`}
+                className="mb-4 animate-pulse break-inside-avoid rounded-2xl bg-white/10 aspect-[2/3]"
               />
             ))}
           </div>
@@ -167,16 +160,14 @@ const FilmPosterPage = () => {
               return (
                 <article
                   key={poster.id}
-                  className="group relative mb-4 break-inside-avoid overflow-hidden rounded-2xl bg-[#0d0d0d]"
+                  className="group relative mb-4 break-inside-avoid overflow-hidden rounded-2xl bg-[#0d0d0d] aspect-[2/3]"
                 >
                   <Image
                     src={image}
                     alt={`${poster.film_name} film poster`}
-                    width={1000}
-                    height={1500}
+                    fill
                     unoptimized
-                    sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
-                    className="h-auto w-full grayscale transition duration-500 group-hover:scale-[1.015] group-hover:grayscale-0"
+                    className="object-cover transition duration-500 group-hover:scale-[1.015]"
                   />
 
                   <div className="absolute inset-x-0 bottom-0 translate-y-full bg-gradient-to-t from-black via-black/80 to-transparent px-5 pt-20 pb-5 transition-transform duration-300 group-hover:translate-y-0">
