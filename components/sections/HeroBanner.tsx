@@ -166,10 +166,10 @@ const HeroBanner = () => {
                   <li
                     key={service.href}
                     className={`absolute cursor-grab touch-none select-none ${
-                      draggedService === service.href
-                        ? "z-10 cursor-grabbing scale-110 drop-shadow-[0_0_14px_rgba(254,197,45,0.45)]"
-                        : "transition-transform duration-500 ease-out"
-                    } ${service.position}`}
+                        draggedService === service.href
+                          ? "z-10 cursor-grabbing scale-110 drop-shadow-[0_0_14px_rgba(254,197,45,0.45)]"
+                          : "transition-transform duration-500 ease-out"
+                      } ${service.position}`}
                     style={{
                       transform: `translate3d(${positions[service.href]?.x ?? 0}px, ${
                         positions[service.href]?.y ?? 0
