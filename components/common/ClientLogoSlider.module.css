@@ -16,31 +16,34 @@
   display: flex;
   width: max-content;
   animation: slide 90s linear infinite;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
 }
 
 .logoGroup {
   display: flex;
   flex-shrink: 0;
   align-items: center;
-  gap: 0;
+  gap: 30px;
   margin: 0;
-  padding: 0;
+  padding: 0 30px 0 0;
   list-style: none;
 }
 
 .logoItem {
   display: flex;
-  width: 9rem;
+  width: auto;
   height: 5rem;
   flex-shrink: 0;
   align-items: center;
-  justify-content: center;
 }
 
 .logo {
+  display: block;
   width: auto;
+  height: 4rem;
   max-width: 8.5rem;
-  height: auto;
   max-height: 4rem;
   object-fit: contain;
   filter: grayscale(1);
@@ -55,18 +58,23 @@
 }
 
 @keyframes slide {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
   to {
-    transform: translateX(-50%);
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
 @media (max-width: 639px) {
   .logoItem {
-    width: 7.5rem;
+    width: auto;
     height: 4rem;
   }
 
   .logo {
+    height: 3rem;
     max-width: 6.5rem;
     max-height: 3rem;
   }

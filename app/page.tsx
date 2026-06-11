@@ -10,7 +10,6 @@ export default function Home() {
       <HeroBanner />
       <FeaturedBentoGrid />
       <HomeAbout />
-
       <HomeContact />
     </>
   );

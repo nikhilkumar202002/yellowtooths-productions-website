@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Roboto_Condensed } from "next/font/google";
+import Preloader from "@/components/common/Preloader";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import "./globals.css";
@@ -30,6 +31,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${robotoCondensed.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-black text-white">
+        <Preloader />
         <Header />
         <main className="flex flex-1 flex-col">{children}</main>
         <Footer />

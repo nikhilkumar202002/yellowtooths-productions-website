@@ -4,38 +4,42 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState, type PointerEvent } from "react";
 import Container from "@/components/common/Container";
-import InteractiveToothLogo from "@/components/common/InteractiveToothLogo";
 
 const services = [
   {
     label: "Film Poster",
     href: "/services/film-poster",
-    position: "lg:top-[8%] lg:left-0",
+    position: "top-[10%] left-0",
   },
   {
     label: "Film Promotion",
     href: "/services/film-promotion",
-    position: "lg:top-[27%] lg:left-[22%]",
-  },
-  {
-    label: "Branding",
-    href: "/services/branding",
-    position: "lg:top-[39%] lg:right-0",
+    position: "top-[30%] left-[40%]",
   },
   {
     label: "Digital Marketing",
     href: "/services/digital-marketing",
-    position: "lg:top-[50%] lg:left-[3%]",
+    position: "top-[52%] left-0",
+  },
+  {
+    label: "Branding",
+    href: "/services/branding",
+    position: "top-[52%] right-0",
   },
   {
     label: "Thinkery",
     href: "/services/thinkery",
-    position: "lg:top-[70%] lg:left-[22%]",
+    position: "top-[72%] left-[41%]",
+  },
+  {
+    label: "Web Technology",
+    href: "/services/technology-experience-design",
+    position: "bottom-0 left-0",
   },
   {
     label: "GAA",
     href: "/services/global-academy-of-artistry",
-    position: "lg:right-0 lg:bottom-[2%]",
+    position: "right-0 bottom-0",
   },
 ];
 
@@ -65,8 +69,6 @@ const HeroBanner = () => {
     event: PointerEvent<HTMLLIElement>,
     href: string,
   ) => {
-    if (!window.matchMedia("(min-width: 1024px)").matches) return;
-
     const container = event.currentTarget.parentElement;
     if (!container) return;
 
@@ -139,27 +141,34 @@ const HeroBanner = () => {
     <section id="home-hero" className="border-b border-white/15 bg-black">
       <Container>
         <div className="grid min-h-[720px] lg:h-[720px] lg:grid-cols-2">
-          <div className="relative flex flex-col justify-between py-12 pr-0 sm:py-16 lg:py-10 lg:pr-14">
+          <div className="relative h-[720px] min-w-0 py-10 pr-0 lg:pr-14">
             <Image
               src="/logo_full_size.svg"
               alt="Yellowtooths Productions"
               width={196}
               height={31}
               priority
-              className="relative z-10 mb-5 h-auto w-32 sm:w-36"
+              className="relative z-10 h-auto w-32 sm:w-36"
             />
 
             <nav
               id="hero-services"
               aria-label="Services"
-              className="mt-12 lg:absolute lg:top-28 lg:right-14 lg:bottom-10 lg:left-0 lg:mt-0"
+              className="absolute top-1/2 right-0 left-0 h-[520px] -translate-y-1/2 lg:right-14"
+              onPointerDown={(event) => {
+                if (!(event.target as HTMLElement).closest("li")) {
+                  setPositions({});
+                }
+              }}
             >
-              <ul className="space-y-3 lg:relative lg:h-full lg:space-y-0">
+              <ul className="relative h-full">
                 {services.map((service) => (
                   <li
                     key={service.href}
-                    className={`lg:absolute lg:cursor-grab lg:select-none lg:touch-none ${
-                      draggedService === service.href ? "lg:cursor-grabbing" : ""
+                    className={`absolute cursor-grab touch-none select-none ${
+                      draggedService === service.href
+                        ? "z-10 cursor-grabbing scale-110 drop-shadow-[0_0_14px_rgba(254,197,45,0.45)]"
+                        : "transition-transform duration-500 ease-out"
                     } ${service.position}`}
                     style={{
                       transform: `translate3d(${positions[service.href]?.x ?? 0}px, ${
@@ -182,7 +191,7 @@ const HeroBanner = () => {
                           suppressClick.current = null;
                         }
                       }}
-                      className={`font-heading inline-block whitespace-nowrap text-[clamp(1.25rem,1.65vw,1.6rem)] capitalize transition-colors hover:text-[#fec52d] focus-visible:text-[#fec52d] focus-visible:outline-none ${
+                      className={`font-heading inline-block whitespace-nowrap text-[clamp(1.05rem,4.3vw,1.6rem)] capitalize transition-colors hover:text-[#fec52d] focus-visible:text-[#fec52d] focus-visible:outline-none ${
                         draggedService === service.href
                           ? "text-[#fec52d]"
                           : "text-white"
@@ -195,13 +204,13 @@ const HeroBanner = () => {
               </ul>
 
               <div
-                className="font-description pointer-events-none absolute right-0 bottom-0 hidden items-center gap-2 text-[0.65rem] uppercase tracking-[0.12em] text-white/35 lg:flex"
+                className="font-description pointer-events-none absolute right-0 -bottom-7 flex items-center gap-2 text-[0.6rem] uppercase tracking-[0.12em] text-[#fec52d] sm:text-[0.65rem]"
                 aria-hidden="true"
               >
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
-                  className="size-3.5"
+                  className="size-3.5 animate-pulse"
                 >
                   <path
                     d="M12 3v18M3 12h18m-6-6-3-3-3 3m6 12-3 3-3-3M6 9l-3 3 3 3m12-6 3 3-3 3"
@@ -214,10 +223,6 @@ const HeroBanner = () => {
                 Drag to explore
               </div>
             </nav>
-
-            <div className="absolute bottom-10 left-0">
-              <InteractiveToothLogo targetId="hero-services" />
-            </div>
           </div>
 
           <div className="min-h-[420px] border-t border-white/15 py-8 sm:min-h-[560px] lg:border-t-0 lg:border-l lg:py-10 lg:pl-12">
