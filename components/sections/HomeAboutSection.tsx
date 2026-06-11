@@ -6,7 +6,7 @@ const tickerItems = ["Ideas", "Images", "Motion", "Experiences"];
 
 const HomeAboutSection = () => {
   return (
-    <section className="overflow-hidden border-b border-black/15 bg-[#f2f0e9] text-[#111]">
+    <section className="overflow-x-clip border-b border-black/15 bg-[#f2f0e9] text-[#111]">
       <Container>
         <div className="border-x border-black/15">
           <div className="flex items-center justify-between border-b border-black/15 px-5 py-4 sm:px-8">
