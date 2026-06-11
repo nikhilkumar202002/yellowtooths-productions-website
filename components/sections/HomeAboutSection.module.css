@@ -38,10 +38,10 @@
   z-index: 2;
   display: flex;
   width: 73%;
-  min-height: 105svh;
+  min-height: calc(100svh - 60px);
   justify-content: flex-end;
-  margin-top: -35svh;
-  padding: 0 clamp(1.5rem, 5vw, 5rem) 38svh 1.25rem;
+  margin-top: 0;
+  padding: 8svh clamp(1.5rem, 5vw, 5rem) 18svh 1.25rem;
   pointer-events: none;
 }
 
