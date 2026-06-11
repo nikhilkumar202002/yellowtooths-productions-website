@@ -15,7 +15,7 @@
 .track {
   display: flex;
   width: max-content;
-  animation: slide 90s linear infinite;
+  animation: slide var(--duration, 90s) linear infinite;
   backface-visibility: hidden;
   transform: translate3d(0, 0, 0);
   will-change: transform;
@@ -63,7 +63,7 @@
   }
 
   to {
-    transform: translate3d(-50%, 0, 0);
+    transform: translate3d(calc(-1 * var(--scroll-width, 50%)), 0, 0);
   }
 }
 

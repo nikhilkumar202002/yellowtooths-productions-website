@@ -11,10 +11,10 @@ const navigation = [
 ];
 
 const socialLinks = [
-  { href: "https://instagram.com", label: "Instagram" },
-  { href: "https://youtube.com", label: "YouTube" },
-  { href: "https://linkedin.com", label: "LinkedIn" },
-  { href: "https://behance.net", label: "Behance" },
+  { href: "https://www.instagram.com/yellow_tooths/", label: "Instagram" },
+  { href: "https://www.facebook.com/yellowtoothians", label: "Facebook" },
+  { href: "https://www.linkedin.com/company/yellowtooths/", label: "LinkedIn" },
+  { href: "https://www.behance.net/yellowtoothsweb", label: "Behance" },
 ];
 
 const Footer = () => {

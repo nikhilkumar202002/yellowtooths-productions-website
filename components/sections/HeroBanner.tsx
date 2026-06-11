@@ -85,8 +85,6 @@ const HeroBanner = () => {
       hasMoved: false,
     };
 
-    event.currentTarget.setPointerCapture(event.pointerId);
-    setDraggedService(href);
   };
 
   const handlePointerMove = (event: PointerEvent<HTMLLIElement>) => {
@@ -96,9 +94,13 @@ const HeroBanner = () => {
     const deltaX = event.clientX - drag.startX;
     const deltaY = event.clientY - drag.startY;
 
-    if (Math.hypot(deltaX, deltaY) > 4) {
+    if (!drag.hasMoved && Math.hypot(deltaX, deltaY) > 4) {
       drag.hasMoved = true;
+      event.currentTarget.setPointerCapture(event.pointerId);
+      setDraggedService(drag.href);
     }
+
+    if (!drag.hasMoved) return;
 
     const boundedX = Math.min(
       drag.containerBounds.right - drag.itemBounds.right,
