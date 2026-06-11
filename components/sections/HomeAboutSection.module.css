@@ -12,7 +12,7 @@
 }
 
 .headingPanel {
-  padding: clamp(3.5rem, 7vw, 7rem) clamp(2rem, 5vw, 5rem)
+  padding: 60px clamp(2rem, 5vw, 5rem)
     clamp(10rem, 22vw, 22rem) clamp(1.25rem, 2vw, 2rem);
 }
 
