@@ -37,10 +37,25 @@ export type FilmPosterDesign = {
   images: FilmPosterImage[];
 };
 
+export type Client = {
+  id: number;
+  name: string;
+  logo_path: string;
+  status: number;
+  created_at: string;
+  updated_at: string;
+};
+
 export async function getAllFilmPosterDesigns() {
   const response = await api.get<FilmPosterDesign[]>(
     "/film-poster-designs/all",
   );
+
+  return response.data;
+}
+
+export async function getAllClients() {
+  const response = await api.get<Client[]>("/clients");
 
   return response.data;
 }

@@ -1,5 +1,6 @@
-import Link from "next/link";
+import ClientLogoSlider from "@/components/common/ClientLogoSlider";
 import Container from "@/components/common/Container";
+import Link from "next/link";
 
 const capabilities = [
   "Strategy",
@@ -13,28 +14,34 @@ const HomeAbout = () => {
   return (
     <section className="border-b border-white/15 bg-black text-white">
       <Container>
-        <div className="grid lg:grid-cols-[0.8fr_1.2fr]">
-          <div className="border-b border-white/15 py-12 lg:border-r lg:border-b-0 lg:py-20 lg:pr-12">
-            <p className="font-description text-xs uppercase tracking-[0.18em] text-white/45">
-              About Yellowtooths
-            </p>
+        <div className="grid min-w-0 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+          <div className="flex min-w-0 flex-col overflow-hidden border-b border-white/15 py-12 lg:border-r lg:border-b-0 lg:py-20 lg:pr-12">
+            <div>
+              <p className="font-description text-xs uppercase tracking-[0.18em] text-white/45">
+                About Yellowtooths
+              </p>
 
-            <div className="mt-10 flex flex-wrap gap-2">
-              {capabilities.map((capability) => (
-                <span
-                  key={capability}
-                  className="font-description rounded-full border border-white/15 px-4 py-2 text-xs uppercase tracking-[0.08em] text-white/60"
-                >
-                  {capability}
-                </span>
-              ))}
+              <div className="mt-4 flex flex-wrap gap-2">
+                {capabilities.map((capability) => (
+                  <span
+                    key={capability}
+                    className="font-description rounded-full border border-white/15 px-4 py-2 text-xs uppercase tracking-[0.08em] text-white/60"
+                  >
+                    {capability}
+                  </span>
+                ))}
+              </div>
             </div>
+
+            <ClientLogoSlider />
           </div>
 
-          <div className="py-12 lg:py-20 lg:pl-14">
+          <div className="min-w-0 py-12 lg:py-20 lg:pl-14">
             <h2 className="font-heading max-w-4xl text-[clamp(2rem,4.5vw,4.75rem)] leading-[1.02] tracking-[-0.055em]">
-              We shape bold ideas into stories, identities, and experiences
-              people remember.
+              We <span className="text-[#fec52d]">shape</span> bold ideas into
+              stories, <span className="text-[#fec52d]">identities</span>, and{" "}
+              <span className="text-[#fec52d]">experiences</span> people
+              remember.
             </h2>
 
             <div className="mt-10 grid gap-8 border-t border-white/15 pt-8 sm:grid-cols-[1fr_auto] sm:items-end">

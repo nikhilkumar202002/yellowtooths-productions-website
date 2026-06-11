@@ -33,6 +33,16 @@
   background: #0d0d0d;
 }
 
+.card::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: rgb(0 0 0 / 0.4);
+  content: "";
+  pointer-events: none;
+  transition: opacity 500ms ease;
+}
+
 .imageStage {
   position: absolute;
   inset: 0;
@@ -46,10 +56,6 @@
   will-change: transform, opacity, filter;
 }
 
-.card:hover .image {
-  filter: grayscale(0);
-}
-
 .imageIncoming {
   animation: imageSlideIn 850ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -58,22 +64,133 @@
   animation: imageSlideOut 850ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.youtubeFrame {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
-  pointer-events: none;
-  animation: videoFadeIn 600ms ease both;
-}
-
 .localVideo {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  filter: grayscale(1);
+  transition: filter 500ms ease;
+}
+
+.cardLabel {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  color: #fec52d;
+  font-family: var(--font-heading);
+  pointer-events: none;
+  transition: opacity 500ms ease;
+}
+
+.card:hover::after,
+.card:hover .cardLabel {
+  opacity: 0;
+}
+
+.card:hover .image,
+.card:hover .localVideo {
+  filter: grayscale(0);
+}
+
+.cardTitle {
+  position: absolute;
+  font-size: clamp(2.75rem, 5vw, 6.5rem);
+  font-weight: 700;
+  line-height: 0.8;
+  letter-spacing: -0.065em;
+}
+
+.eyebrow,
+.detail {
+  position: absolute;
+  font-family: var(--font-description);
+  font-size: clamp(0.55rem, 0.65vw, 0.72rem);
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.moviesLabel .cardTitle {
+  right: 1.25rem;
+  bottom: 1.2rem;
+}
+
+.moviesLabel .eyebrow {
+  top: 1.5rem;
+  left: 1.5rem;
+}
+
+.moviesLabel .detail {
+  top: 1.5rem;
+  right: 1.5rem;
+}
+
+.gaaLabel .cardTitle {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(3.5rem, 6vw, 7rem);
+}
+
+.gaaLabel .eyebrow {
+  top: 1.5rem;
+  left: 1.5rem;
+}
+
+.gaaLabel .detail {
+  right: 1.5rem;
+  bottom: 1.5rem;
+}
+
+.websiteLabel .cardTitle {
+  right: 1.5rem;
+  bottom: 1.5rem;
+  font-size: clamp(2.25rem, 3.5vw, 4.5rem);
+}
+
+.brandingLabel .cardTitle {
+  top: 50%;
+  left: 50%;
+  width: max-content;
+  transform: translate(-50%, -50%);
+  font-size: clamp(2.75rem, 4vw, 5rem);
+  line-height: 0.88;
+  letter-spacing: -0.045em;
+  text-align: left;
+}
+
+.brandingLabel .detail {
+  right: 1.75rem;
+  bottom: 1.75rem;
+}
+
+.motionLabel .cardTitle {
+  right: 2rem;
+  bottom: 1.5rem;
+  font-size: clamp(3.5rem, 7vw, 8rem);
+}
+
+.motionLabel .eyebrow {
+  top: 2rem;
+  right: 2rem;
+  text-align: right;
+}
+
+.motionLabel .detail {
+  bottom: 2rem;
+  left: 2rem;
+}
+
+.thinkeryLabel .cardTitle {
+  bottom: 1.75rem;
+  left: 1.75rem;
+  font-size: clamp(2.75rem, 4.5vw, 5.5rem);
+}
+
+.thinkeryLabel .eyebrow {
+  top: 2rem;
+  left: 2rem;
 }
 
 .leftTall {
@@ -137,16 +254,6 @@
   }
 }
 
-@keyframes videoFadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
 @media (max-width: 1023px) {
   .grid {
     grid-template-columns: 1fr;
@@ -204,12 +311,23 @@
   .bottomVideo {
     min-height: 0;
   }
+
+  .cardTitle {
+    font-size: clamp(3rem, 14vw, 5.5rem);
+  }
+
+  .brandingLabel .cardTitle {
+    font-size: clamp(3rem, 13vw, 5rem);
+  }
+
+  .motionLabel .cardTitle {
+    font-size: clamp(3.25rem, 15vw, 6rem);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .imageIncoming,
-  .imageOutgoing,
-  .youtubeFrame {
+  .imageOutgoing {
     animation: none;
   }
 }

@@ -72,7 +72,7 @@ const Footer = () => {
                 href="mailto:hello@yellowtooths.com"
                 className="transition-colors hover:text-white"
               >
-                hello@yellowtooths.com
+                info@yellowtooths.com
               </Link>
               <Link
                 href="tel:+919999999999"

@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 const services = [
-  { label: "Film Poster Design", href: "/services/film-poster-design" },
+  { label: "Film Poster Design", href: "/services/film-poster" },
   { label: "Film Promotion", href: "/services/film-promotion" },
   { label: "Branding", href: "/services/branding" },
   { label: "Digital Marketing", href: "/services/digital-marketing" },

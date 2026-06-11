@@ -1,3 +1,4 @@
+
 import FeaturedBentoGrid from "@/components/sections/FeaturedBentoGrid";
 import HeroBanner from "@/components/sections/HeroBanner";
 import HomeAbout from "@/components/sections/HomeAbout";
@@ -9,6 +10,7 @@ export default function Home() {
       <HeroBanner />
       <FeaturedBentoGrid />
       <HomeAbout />
+
       <HomeContact />
     </>
   );

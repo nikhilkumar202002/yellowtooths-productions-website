@@ -20,8 +20,6 @@ const imageGroups = [
 
 const intervals = [4700, 6200, 5600];
 const delays = [900, 1800, 1200];
-const youtubeVideoIds = ["ZAVjO5GLFI4", "CLqWPaA_PJM"];
-const youtubePlaylist = youtubeVideoIds.join(",");
 
 const preloadImages = (images: string[]) => {
   images.forEach((src) => {
@@ -105,6 +103,24 @@ const FeaturedImage = ({
     </div>
   );
 };
+
+const CardLabel = ({
+  title,
+  className,
+  eyebrow,
+  detail,
+}: {
+  title: React.ReactNode;
+  className: string;
+  eyebrow?: React.ReactNode;
+  detail?: React.ReactNode;
+}) => (
+  <div className={`${styles.cardLabel} ${className}`} aria-hidden="true">
+    {eyebrow && <span className={styles.eyebrow}>{eyebrow}</span>}
+    <span className={styles.cardTitle}>{title}</span>
+    {detail && <span className={styles.detail}>{detail}</span>}
+  </div>
+);
 
 const FeaturedBentoGrid = () => {
   const [posterImages, setPosterImages] = useState<string[]>([]);
@@ -194,6 +210,20 @@ const FeaturedBentoGrid = () => {
                   posterNames[imageOne.index] || "Yellowtooths film poster"
                 }
               />
+              <CardLabel
+                title="Movies."
+                className={styles.moviesLabel}
+                eyebrow={
+                  <>
+                    Featuring
+                    <br />
+                    Movie Poster
+                    <br />
+                    Keyarts
+                  </>
+                }
+                detail="#12"
+              />
             </Link>
 
             <div className={`${styles.card} ${styles.centerTop}`}>
@@ -209,6 +239,12 @@ const FeaturedBentoGrid = () => {
                 <source src="/Videos/gaa-video.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
+              <CardLabel
+                title="GAA."
+                className={styles.gaaLabel}
+                eyebrow="Testimonials / 2025"
+                detail="Global Academy of Artistry"
+              />
             </div>
 
             <Link
@@ -220,15 +256,43 @@ const FeaturedBentoGrid = () => {
                 {...imageTwo}
                 alt="Yellowtooths featured website project"
               />
+              <CardLabel
+                title="Website."
+                className={styles.websiteLabel}
+              />
             </Link>
 
             <div className={`${styles.card} ${styles.bottomVideo}`}>
-              <iframe
-                src={`https://www.youtube-nocookie.com/embed/${youtubeVideoIds[0]}?autoplay=1&mute=1&controls=0&disablekb=1&fs=0&iv_load_policy=3&loop=1&modestbranding=1&playlist=${youtubePlaylist}&playsinline=1&rel=0`}
-                title="Yellowtooths featured videos"
-                className={styles.youtubeFrame}
-                allow="autoplay; encrypted-media; picture-in-picture"
-                tabIndex={-1}
+              <video
+                className={styles.localVideo}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                aria-label="Yellowtooths motion work"
+              >
+                <source
+                  src="/Videos/motion_works slideshow final.mp4"
+                  type="video/mp4"
+                />
+                Your browser does not support the video tag.
+              </video>
+              <CardLabel
+                title="Motion."
+                className={styles.motionLabel}
+                eyebrow={
+                  <>
+                    Motion Posters
+                    <br />
+                    Lyric Videos
+                    <br />
+                    Animations
+                    <br />
+                    Ads
+                  </>
+                }
+                detail="Official Motion Space."
               />
             </div>
           </div>
@@ -242,6 +306,29 @@ const FeaturedBentoGrid = () => {
               <FeaturedImage
                 {...imageThree}
                 alt="Yellowtooths featured branding project"
+              />
+              <CardLabel
+                title={
+                  <>
+                    Br
+                    <br />
+                    an
+                    <br />
+                    di
+                    <br />
+                    ng.
+                  </>
+                }
+                className={styles.brandingLabel}
+                detail={
+                  <>
+                    Leading
+                    <br />
+                    Branding
+                    <br />
+                    Portfolio
+                  </>
+                }
               />
             </Link>
 
@@ -258,6 +345,19 @@ const FeaturedBentoGrid = () => {
                 <source src="/Videos/thinkery-video.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
+              <CardLabel
+                title="Thinkery."
+                className={styles.thinkeryLabel}
+                eyebrow={
+                  <>
+                    Shoots
+                    <br />
+                    Ads
+                    <br />
+                    Promos
+                  </>
+                }
+              />
             </div>
           </div>
         </div>
