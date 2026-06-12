@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, type PointerEvent } from "react";
 import Container from "@/components/common/Container";
@@ -75,22 +74,11 @@ const motionSeeds = [
   { velocityX: -16, velocityY: -14 },
 ];
 
-const LOGO_GAP = 24;
 const FLOAT_RESUME_DELAY = 20_000;
-
-const overlapsLogo = (
-  item: { left: number; top: number; right: number; bottom: number },
-  logo: DOMRect,
-) =>
-  item.left < logo.right + LOGO_GAP &&
-  item.right > logo.left - LOGO_GAP &&
-  item.top < logo.bottom + LOGO_GAP &&
-  item.bottom > logo.top - LOGO_GAP;
 
 const HeroBanner = () => {
   const [draggedService, setDraggedService] = useState<string | null>(null);
   const servicesRef = useRef<HTMLUListElement | null>(null);
-  const logoRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef<Map<string, HTMLLIElement>>(new Map());
   const motionStates = useRef<Map<string, MotionState>>(new Map());
   const dragState = useRef<DragState | null>(null);
@@ -138,7 +126,6 @@ const HeroBanner = () => {
 
       if (container) {
         const containerBounds = container.getBoundingClientRect();
-        const logoBounds = logoRef.current?.getBoundingClientRect();
         const isDragging = dragState.current?.hasMoved === true;
 
         motionStates.current.forEach((motion, href) => {
@@ -180,47 +167,6 @@ const HeroBanner = () => {
               motion.velocityY *= -1;
             }
 
-            if (logoBounds) {
-              const nextBounds = {
-                left: baseLeft + motion.x,
-                top: baseTop + motion.y,
-                right: baseLeft + motion.x + itemBounds.width,
-                bottom: baseTop + motion.y + itemBounds.height,
-              };
-
-              if (overlapsLogo(nextBounds, logoBounds)) {
-                const horizontalBounds = {
-                  ...nextBounds,
-                  top: baseTop + previousY,
-                  bottom: baseTop + previousY + itemBounds.height,
-                };
-                const verticalBounds = {
-                  ...nextBounds,
-                  left: baseLeft + previousX,
-                  right: baseLeft + previousX + itemBounds.width,
-                };
-
-                if (overlapsLogo(horizontalBounds, logoBounds)) {
-                  motion.x = previousX;
-                  motion.velocityX *= -1;
-                }
-
-                if (overlapsLogo(verticalBounds, logoBounds)) {
-                  motion.y = previousY;
-                  motion.velocityY *= -1;
-                }
-
-                if (
-                  motion.x !== previousX &&
-                  motion.y !== previousY
-                ) {
-                  motion.x = previousX;
-                  motion.y = previousY;
-                  motion.velocityX *= -1;
-                  motion.velocityY *= -1;
-                }
-              }
-            }
           }
 
           item.style.transform = `translate3d(${motion.x}px, ${motion.y}px, 0)`;
@@ -302,16 +248,6 @@ const HeroBanner = () => {
       x: drag.initialPosition.x + boundedDeltaX,
       y: drag.initialPosition.y + boundedDeltaY,
     };
-    const logoBounds = logoRef.current?.getBoundingClientRect();
-    const nextBounds = {
-      left: drag.itemBounds.left + boundedDeltaX,
-      top: drag.itemBounds.top + boundedDeltaY,
-      right: drag.itemBounds.right + boundedDeltaX,
-      bottom: drag.itemBounds.bottom + boundedDeltaY,
-    };
-
-    if (logoBounds && overlapsLogo(nextBounds, logoBounds)) return;
-
     const motion = motionStates.current.get(drag.href);
     if (motion) {
       motion.x = nextPosition.x;
@@ -368,29 +304,6 @@ const HeroBanner = () => {
       <Container className="relative z-10">
         <div className="h-[760px]">
           <div className="relative h-full min-w-0 py-10">
-            <Image
-              src="/logo-02.png"
-              alt=""
-              width={4167}
-              height={4167}
-              priority
-              className="pointer-events-none absolute top-1/2 left-1/2 z-0 w-[clamp(8rem,18vw,16rem)] -translate-x-1/2 -translate-y-1/2"
-            />
-
-            <div
-              ref={logoRef}
-              className="pointer-events-none absolute top-1/2 left-1/2 z-0 w-[clamp(8rem,18vw,16rem)] -translate-x-1/2 -translate-y-1/2"
-            >
-              <Image
-                src="/logo-01.png"
-                alt=""
-                width={4167}
-                height={4167}
-                priority
-                className={`size-full ${styles.logoSpin}`}
-              />
-            </div>
-
             <nav
               id="hero-services"
               aria-label="Services"

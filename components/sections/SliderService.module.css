@@ -1,20 +1,18 @@
 .track {
-  display: flex;
+  width: 100%;
   min-width: 0;
   max-width: 100%;
-  align-items: stretch;
-  gap: clamp(1rem, 2vw, 1.75rem);
-  width: 100%;
   margin-top: 2.5rem;
-  overflow-x: auto;
-  overflow-y: hidden;
-  overscroll-behavior-x: contain;
-  scrollbar-width: none;
+  overflow: hidden;
   cursor: default;
 }
 
-.track::-webkit-scrollbar {
-  display: none;
+.trackInner {
+  display: flex;
+  align-items: stretch;
+  gap: clamp(1rem, 2vw, 1.75rem);
+  width: max-content;
+  will-change: transform;
 }
 
 .leadingSpace,
@@ -32,10 +30,11 @@
   background: #111;
   isolation: isolate;
   opacity: 1;
+  box-shadow: none;
   transform: translateZ(0);
   transition:
-    transform 800ms cubic-bezier(0.16, 1, 0.3, 1),
-    border-radius 900ms cubic-bezier(0.16, 1, 0.3, 1);
+    transform 500ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-radius 600ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, border-radius;
 }
 
@@ -51,11 +50,8 @@
 
 .activeCard {
   border-radius: 50%;
-  transform: rotate(-4deg) scale(1.02);
-}
-
-.dimmedCard {
-  transform: scale(0.96);
+  box-shadow: none;
+  transform: rotate(-4deg);
 }
 
 .imageWrap,
@@ -140,8 +136,7 @@
   }
 
   .card,
-  .activeCard,
-  .dimmedCard {
+  .activeCard {
     flex-basis: min(82vw, 22rem);
     height: min(32rem, 62vh);
     opacity: 1;

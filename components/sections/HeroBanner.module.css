@@ -19,17 +19,6 @@
   will-change: transform;
 }
 
-.logoSpin {
-  animation: logoSpin 24s linear infinite;
-  will-change: transform;
-}
-
-@keyframes logoSpin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 @keyframes grainShift {
   0%,
   100% {
@@ -58,8 +47,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .grainOverlay,
-  .logoSpin {
+  .grainOverlay {
     animation: none;
   }
 }
