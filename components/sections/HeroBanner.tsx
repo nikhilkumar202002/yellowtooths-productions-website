@@ -76,6 +76,7 @@ const motionSeeds = [
 ];
 
 const LOGO_GAP = 24;
+const FLOAT_RESUME_DELAY = 20_000;
 
 const overlapsLogo = (
   item: { left: number; top: number; right: number; bottom: number },
@@ -94,6 +95,8 @@ const HeroBanner = () => {
   const motionStates = useRef<Map<string, MotionState>>(new Map());
   const dragState = useRef<DragState | null>(null);
   const suppressClick = useRef<string | null>(null);
+  const floatingPaused = useRef(false);
+  const resumeTimer = useRef<number | null>(null);
 
   useEffect(() => {
     const reduceMotion = window.matchMedia(
@@ -136,10 +139,12 @@ const HeroBanner = () => {
       if (container) {
         const containerBounds = container.getBoundingClientRect();
         const logoBounds = logoRef.current?.getBoundingClientRect();
+        const isDragging = dragState.current?.hasMoved === true;
 
         motionStates.current.forEach((motion, href) => {
           const item = itemRefs.current.get(href);
-          if (!item || dragState.current?.href === href) return;
+          if (!item || isDragging) return;
+          if (floatingPaused.current && !motion.resetting) return;
 
           if (motion.resetting) {
             const returnSpeed = Math.min(1, deltaTime * 4.5);
@@ -229,6 +234,9 @@ const HeroBanner = () => {
 
     return () => {
       window.cancelAnimationFrame(animationFrame);
+      if (resumeTimer.current) {
+        window.clearTimeout(resumeTimer.current);
+      }
       window.removeEventListener(
         "yellowtooths:preloader-complete",
         restartFloating,
@@ -270,6 +278,11 @@ const HeroBanner = () => {
 
     if (!drag.hasMoved && Math.hypot(deltaX, deltaY) > 4) {
       drag.hasMoved = true;
+      floatingPaused.current = true;
+      if (resumeTimer.current) {
+        window.clearTimeout(resumeTimer.current);
+        resumeTimer.current = null;
+      }
       event.currentTarget.setPointerCapture(event.pointerId);
       setDraggedService(drag.href);
     }
@@ -322,6 +335,11 @@ const HeroBanner = () => {
       window.setTimeout(() => {
         if (suppressClick.current === drag.href) suppressClick.current = null;
       }, 0);
+
+      resumeTimer.current = window.setTimeout(() => {
+        floatingPaused.current = false;
+        resumeTimer.current = null;
+      }, FLOAT_RESUME_DELAY);
     }
 
     dragState.current = null;
