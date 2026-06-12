@@ -11,103 +11,67 @@
   will-change: transform;
 }
 
-.serviceDrift {
-  --drift-x-1: 44px;
-  --drift-y-1: -22px;
-  --drift-x-2: 20px;
-  --drift-y-2: 34px;
-  --drift-x-3: 0px;
-  --drift-y-3: 18px;
-  animation: serviceDrift 28s linear infinite;
+.serviceFloat {
+  --float-x: -8px;
+  --float-y: -6px;
+  animation: serviceFloat 4.5s ease-in-out infinite alternate;
   will-change: transform;
 }
 
-.serviceDrift:nth-child(2) {
-  --drift-x-1: -42px;
-  --drift-y-1: 28px;
-  --drift-x-2: 24px;
-  --drift-y-2: 38px;
-  --drift-x-3: 50px;
-  --drift-y-3: -20px;
-  animation-duration: 32s;
-  animation-delay: -8s;
+.serviceFloat:nth-child(2) {
+  --float-x: 8px;
+  --float-y: -6px;
+  animation-delay: -1.4s;
 }
 
-.serviceDrift:nth-child(3) {
-  --drift-x-1: 52px;
-  --drift-y-1: 32px;
-  --drift-x-2: 26px;
-  --drift-y-2: -24px;
-  --drift-x-3: 70px;
-  --drift-y-3: -8px;
-  animation-duration: 26s;
-  animation-delay: -14s;
+.serviceFloat:nth-child(3) {
+  --float-x: -10px;
+  --float-y: 0px;
+  animation-delay: -2.8s;
 }
 
-.serviceDrift:nth-child(4) {
-  --drift-x-1: -48px;
-  --drift-y-1: -18px;
-  --drift-x-2: -20px;
-  --drift-y-2: 36px;
-  --drift-x-3: -64px;
-  --drift-y-3: 24px;
-  animation-duration: 35s;
-  animation-delay: -20s;
+.serviceFloat:nth-child(4) {
+  --float-x: 10px;
+  --float-y: 0px;
+  animation-delay: -0.8s;
 }
 
-.serviceDrift:nth-child(5) {
-  --drift-x-1: 42px;
-  --drift-y-1: -30px;
-  --drift-x-2: -42px;
-  --drift-y-2: -12px;
-  --drift-x-3: 18px;
-  --drift-y-3: 28px;
-  animation-duration: 30s;
-  animation-delay: -11s;
+.serviceFloat:nth-child(5) {
+  --float-x: -8px;
+  --float-y: 6px;
+  animation-delay: -3.5s;
 }
 
-.serviceDrift:nth-child(6) {
-  --drift-x-1: 46px;
-  --drift-y-1: -26px;
-  --drift-x-2: 78px;
-  --drift-y-2: -58px;
-  --drift-x-3: 22px;
-  --drift-y-3: -74px;
-  animation-duration: 34s;
-  animation-delay: -18s;
+.serviceFloat:nth-child(6) {
+  --float-x: -8px;
+  --float-y: 6px;
+  animation-delay: -2s;
 }
 
-.serviceDrift:nth-child(7) {
-  --drift-x-1: -44px;
-  --drift-y-1: -30px;
-  --drift-x-2: -74px;
-  --drift-y-2: -62px;
-  --drift-x-3: -20px;
-  --drift-y-3: -78px;
-  animation-duration: 29s;
-  animation-delay: -24s;
+.serviceFloat:nth-child(7) {
+  --float-x: 8px;
+  --float-y: 6px;
+  animation-delay: -1s;
 }
 
-.serviceDriftPaused {
-  animation-play-state: paused;
+.logoSpin {
+  animation: logoSpin 24s linear infinite;
+  will-change: transform;
 }
 
-@keyframes serviceDrift {
-  0%,
-  100% {
+@keyframes logoSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes serviceFloat {
+  from {
     transform: translate3d(0, 0, 0);
   }
 
-  25% {
-    transform: translate3d(var(--drift-x-1), var(--drift-y-1), 0);
-  }
-
-  50% {
-    transform: translate3d(var(--drift-x-2), var(--drift-y-2), 0);
-  }
-
-  75% {
-    transform: translate3d(var(--drift-x-3), var(--drift-y-3), 0);
+  to {
+    transform: translate3d(var(--float-x), var(--float-y), 0);
   }
 }
 
@@ -140,7 +104,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .grainOverlay,
-  .serviceDrift {
+  .logoSpin,
+  .serviceFloat {
     animation: none;
   }
 }

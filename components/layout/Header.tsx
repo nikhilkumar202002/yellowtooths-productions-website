@@ -2,51 +2,45 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Container from "@/components/common/Container";
 import ServicesDropdown from "@/components/layout/ServicesDropdown";
 
 const Header = () => {
-  const pathname = usePathname();
-  const isHomePage = pathname === "/";
-  const [hasPassedHero, setHasPassedHero] = useState(false);
-  const isVisible = !isHomePage || hasPassedHero;
+  const [isPastHeader, setIsPastHeader] = useState(false);
+  const [isScrollingUp, setIsScrollingUp] = useState(false);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
-    if (!isHomePage) {
-      return;
-    }
+    lastScrollY.current = window.scrollY;
 
-    const updateHeaderVisibility = () => {
-      const hero = document.getElementById("home-hero");
-      setHasPassedHero(Boolean(hero && hero.getBoundingClientRect().bottom <= 0));
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      const pastHeader = currentScrollY > 60;
+
+      setIsPastHeader(pastHeader);
+      setIsScrollingUp(
+        pastHeader && currentScrollY < lastScrollY.current,
+      );
+      lastScrollY.current = currentScrollY;
     };
 
-    const animationFrame = window.requestAnimationFrame(updateHeaderVisibility);
-    window.addEventListener("scroll", updateHeaderVisibility, {
-      passive: true,
-    });
-    window.addEventListener("resize", updateHeaderVisibility);
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
-    return () => {
-      window.cancelAnimationFrame(animationFrame);
-      window.removeEventListener("scroll", updateHeaderVisibility);
-      window.removeEventListener("resize", updateHeaderVisibility);
-    };
-  }, [isHomePage]);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <header
-      className={`z-50 w-full border-b border-white/15 bg-black transition-transform duration-300 ${
-        isHomePage
-          ? `fixed inset-x-0 top-0 ${
-              isVisible ? "translate-y-0" : "-translate-y-full"
-            }`
-          : "relative"
-      }`}
-      aria-hidden={isHomePage && !isVisible}
-    >
+    <div className="relative h-[60px]">
+      <header
+        className={`z-50 w-full border-b border-white/15 bg-black transition-transform duration-300 ${
+          isPastHeader
+            ? `fixed inset-x-0 top-0 ${
+                isScrollingUp ? "translate-y-0" : "-translate-y-full"
+              }`
+            : "relative"
+        }`}
+      >
       <Container>
         <div className="flex h-[60px] items-stretch">
           <Link
@@ -167,7 +161,8 @@ const Header = () => {
           </Link>
         </div>
       </Container>
-    </header>
+      </header>
+    </div>
   );
 };
 
