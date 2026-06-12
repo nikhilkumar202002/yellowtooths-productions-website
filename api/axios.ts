@@ -54,6 +54,14 @@ export async function getAllFilmPosterDesigns() {
   return response.data;
 }
 
+export async function getFilmPosterDesign(id: number) {
+  const response = await api.get<FilmPosterDesign>(
+    `/film-poster-designs/${id}`,
+  );
+
+  return response.data;
+}
+
 export async function getAllClients() {
   const response = await api.get<Client[]>("/clients");
 

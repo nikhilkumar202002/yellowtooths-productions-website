@@ -1,0 +1,217 @@
+.track {
+  display: flex;
+  align-items: stretch;
+  gap: clamp(1rem, 2vw, 1.75rem);
+  width: 100%;
+  margin-top: 2.5rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: max(1.25rem, calc((100vw - 1536px) / 2 + 3rem));
+  scrollbar-width: none;
+  cursor: default;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+.leadingSpace,
+.trailingSpace {
+  flex: 0 0 max(1.25rem, calc((100vw - 1536px) / 2 + 3rem));
+}
+
+.card {
+  --pointer-x: 50%;
+  --pointer-y: 50%;
+  --accent: #fec52d;
+  position: relative;
+  flex: 0 0 clamp(18rem, 29vw, 28rem);
+  height: clamp(28rem, 60vh, 39rem);
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 0.14);
+  border-radius: 28px;
+  background: #111;
+  scroll-snap-align: start;
+  isolation: isolate;
+  opacity: 1;
+  transform: translateZ(0);
+  transition:
+    flex-basis 800ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 600ms ease,
+    transform 800ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-radius 900ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 600ms ease,
+    box-shadow 700ms ease;
+  will-change: flex-basis, transform, border-radius;
+}
+
+.card::after {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  border: 1px solid rgb(255 255 255 / 0.13);
+  border-radius: inherit;
+  content: "";
+  pointer-events: none;
+}
+
+.activeCard {
+  flex-basis: clamp(23rem, 39vw, 38rem);
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  border-radius: 50%;
+  transform: rotate(-4deg) scale(1.02);
+  box-shadow:
+    0 32px 90px rgb(0 0 0 / 0.55),
+    0 0 55px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+.dimmedCard {
+  flex-basis: clamp(16rem, 24vw, 23rem);
+  opacity: 0.48;
+  transform: scale(0.96);
+}
+
+.imageWrap,
+.image,
+.scrim,
+.light {
+  position: absolute;
+  inset: 0;
+}
+
+.imageWrap {
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.image {
+  object-fit: cover;
+  filter: saturate(0.82) contrast(1.03);
+  transform: scale(1.02);
+  transition:
+    transform 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 800ms ease;
+}
+
+.activeCard .image {
+  filter: saturate(1.08) contrast(1.06);
+  transform: scale(1.12);
+}
+
+.scrim {
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgb(0 0 0 / 0.08) 20%, rgb(0 0 0 / 0.84) 100%),
+    linear-gradient(90deg, rgb(0 0 0 / 0.18), transparent 60%);
+}
+
+.light {
+  z-index: 2;
+  opacity: 0;
+  background: radial-gradient(
+    360px circle at var(--pointer-x) var(--pointer-y),
+    color-mix(in srgb, var(--accent) 28%, transparent),
+    transparent 68%
+  );
+  mix-blend-mode: screen;
+  transition: opacity 500ms ease;
+}
+
+.activeCard .light {
+  opacity: 1;
+}
+
+.content {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: clamp(1.25rem, 2.4vw, 2rem);
+}
+
+.topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-description);
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.7);
+}
+
+.copy {
+  transform: none;
+}
+
+.copy h3 {
+  max-width: 9ch;
+  font-family: var(--font-heading);
+  font-size: clamp(2.2rem, 4.5vw, 4.8rem);
+  font-weight: 500;
+  line-height: 0.86;
+  letter-spacing: -0.065em;
+  text-transform: capitalize;
+}
+
+.progress {
+  position: relative;
+  height: 1px;
+  margin-top: 2.5rem;
+  overflow: hidden;
+  background: rgb(255 255 255 / 0.16);
+}
+
+.progress span {
+  position: absolute;
+  inset: 0;
+  background: #fec52d;
+  transform-origin: left center;
+  transition: transform 120ms linear;
+}
+
+@media (max-width: 767px) {
+  .track {
+    scroll-padding-inline: 1.25rem;
+  }
+
+  .leadingSpace,
+  .trailingSpace {
+    flex-basis: 1.25rem;
+  }
+
+  .card,
+  .activeCard,
+  .dimmedCard {
+    flex-basis: min(82vw, 22rem);
+    height: min(32rem, 62vh);
+    opacity: 1;
+    transform: none;
+  }
+
+  .activeCard {
+    border-radius: 50%;
+    transform: rotate(-3deg);
+  }
+
+  .copy h3 {
+    font-size: clamp(2.3rem, 12vw, 3.6rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    scroll-behavior: auto;
+  }
+
+  .card,
+  .image,
+  .light,
+  .progress span {
+    transition-duration: 0.01ms;
+  }
+}

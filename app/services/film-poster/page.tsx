@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
   getAllFilmPosterDesigns,
@@ -164,8 +165,10 @@ const FilmPosterPage = () => {
                 if (!image) return null;
 
                 return (
-                  <article
+                  <Link
                     key={poster.id}
+                    href={`/services/film-poster/${poster.id}`}
+                    aria-label={`View ${poster.film_name} film poster`}
                     className="group relative isolate aspect-[2/3] h-full overflow-hidden rounded-md bg-[#0d0d0d] sm:rounded-2xl [transform:translateZ(0)]"
                   >
                     <Image
@@ -187,7 +190,7 @@ const FilmPosterPage = () => {
                           .join(" / ")}
                       </p>
                     </div>
-                  </article>
+                  </Link>
                 );
               })}
             </div>

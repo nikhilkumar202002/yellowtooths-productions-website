@@ -34,10 +34,8 @@ const HomeContact = () => {
                   <p className="font-description text-xs uppercase tracking-[0.14em] text-white/40">
                     Visit us
                   </p>
-                  <address className="font-description mt-3 max-w-xs text-base not-italic leading-7 text-white/70">
-                    Yellowtooths Productions
-                    <br />
-                    Kerala, India
+                  <address className="font-description mt-3 max-w-xs text-base not-italic leading-[1.4] text-white/70">
+                    Ln-1, Kutty Sahib Layout Rd, near Model Engineering College, Thrikkakara, Edappally, Ernakulam, Kochi, Kerala 682021
                   </address>
                 </div>
 
@@ -45,12 +43,12 @@ const HomeContact = () => {
                   <p className="font-description text-xs uppercase tracking-[0.14em] text-white/40">
                     Contact
                   </p>
-                  <div className="font-description mt-3 flex flex-col items-start gap-2 text-base text-white/70">
+                  <div className="font-description mt-3 flex flex-col items-start text-base text-white/70">
                     <Link
-                      href="mailto:hello@yellowtooths.com"
+                      href="mailto:info@yellowtooths.com"
                       className="transition-colors hover:text-white"
                     >
-                      hello@yellowtooths.com
+                      info@yellowtooths.com
                     </Link>
                     <Link
                       href="tel:+919999999999"
