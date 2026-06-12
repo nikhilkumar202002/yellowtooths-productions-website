@@ -11,47 +11,12 @@
   will-change: transform;
 }
 
-.serviceFloat {
-  --float-x: -8px;
-  --float-y: -6px;
-  animation: serviceFloat 4.5s ease-in-out infinite alternate;
+.serviceItem {
   will-change: transform;
 }
 
-.serviceFloat:nth-child(2) {
-  --float-x: 8px;
-  --float-y: -6px;
-  animation-delay: -1.4s;
-}
-
-.serviceFloat:nth-child(3) {
-  --float-x: -10px;
-  --float-y: 0px;
-  animation-delay: -2.8s;
-}
-
-.serviceFloat:nth-child(4) {
-  --float-x: 10px;
-  --float-y: 0px;
-  animation-delay: -0.8s;
-}
-
-.serviceFloat:nth-child(5) {
-  --float-x: -8px;
-  --float-y: 6px;
-  animation-delay: -3.5s;
-}
-
-.serviceFloat:nth-child(6) {
-  --float-x: -8px;
-  --float-y: 6px;
-  animation-delay: -2s;
-}
-
-.serviceFloat:nth-child(7) {
-  --float-x: 8px;
-  --float-y: 6px;
-  animation-delay: -1s;
+.serviceDragging {
+  will-change: transform;
 }
 
 .logoSpin {
@@ -62,16 +27,6 @@
 @keyframes logoSpin {
   to {
     transform: rotate(360deg);
-  }
-}
-
-@keyframes serviceFloat {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-
-  to {
-    transform: translate3d(var(--float-x), var(--float-y), 0);
   }
 }
 
@@ -104,8 +59,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .grainOverlay,
-  .logoSpin,
-  .serviceFloat {
+  .logoSpin {
     animation: none;
   }
 }

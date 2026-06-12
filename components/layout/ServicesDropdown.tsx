@@ -22,7 +22,7 @@ const ServicesDropdown = () => {
     <div className="group relative flex">
       <Link
         href="/services"
-        className="font-description flex items-center gap-1.5 px-5 text-xs font-medium capitalize tracking-[0.04em] text-white/60 transition-colors hover:text-white group-focus-within:text-white xl:px-4"
+        className="font-heading flex items-center gap-1.5 px-5 text-xs font-medium capitalize tracking-[0.04em] text-white/60 transition-colors hover:text-white group-focus-within:text-white xl:px-4"
         aria-haspopup="true"
       >
         Service
@@ -45,7 +45,7 @@ const ServicesDropdown = () => {
           <Link
             key={service.href}
             href={service.href}
-            className="font-description block px-4 py-2.5 text-sm text-white/70 transition-colors hover:bg-white/[0.06] hover:text-white focus:bg-white/[0.06] focus:text-white focus:outline-none"
+            className="font-heading block px-4 py-2.5 text-sm text-white/70 transition-colors hover:bg-white/[0.06] hover:text-white focus:bg-white/[0.06] focus:text-white focus:outline-none"
           >
             {service.label}
           </Link>

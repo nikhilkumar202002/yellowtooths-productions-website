@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef, useState, type PointerEvent } from "react";
 import Container from "@/components/common/Container";
 import styles from "./HeroBanner.module.css";
 
@@ -41,7 +44,290 @@ const services = [
   },
 ];
 
+type Position = {
+  x: number;
+  y: number;
+};
+
+type DragState = {
+  href: string;
+  pointerId: number;
+  startX: number;
+  startY: number;
+  initialPosition: Position;
+  itemBounds: DOMRect;
+  hasMoved: boolean;
+};
+
+type MotionState = Position & {
+  velocityX: number;
+  velocityY: number;
+  resetting: boolean;
+};
+
+const motionSeeds = [
+  { velocityX: 14, velocityY: 10 },
+  { velocityX: -17, velocityY: 12 },
+  { velocityX: 16, velocityY: -13 },
+  { velocityX: -13, velocityY: 16 },
+  { velocityX: 18, velocityY: -11 },
+  { velocityX: 12, velocityY: -17 },
+  { velocityX: -16, velocityY: -14 },
+];
+
+const LOGO_GAP = 24;
+
+const overlapsLogo = (
+  item: { left: number; top: number; right: number; bottom: number },
+  logo: DOMRect,
+) =>
+  item.left < logo.right + LOGO_GAP &&
+  item.right > logo.left - LOGO_GAP &&
+  item.top < logo.bottom + LOGO_GAP &&
+  item.bottom > logo.top - LOGO_GAP;
+
 const HeroBanner = () => {
+  const [draggedService, setDraggedService] = useState<string | null>(null);
+  const servicesRef = useRef<HTMLUListElement | null>(null);
+  const logoRef = useRef<HTMLDivElement | null>(null);
+  const itemRefs = useRef<Map<string, HTMLLIElement>>(new Map());
+  const motionStates = useRef<Map<string, MotionState>>(new Map());
+  const dragState = useRef<DragState | null>(null);
+  const suppressClick = useRef<string | null>(null);
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    services.forEach((service, index) => {
+      const seed = motionSeeds[index];
+      motionStates.current.set(service.href, {
+        x: 0,
+        y: 0,
+        velocityX: reduceMotion ? 0 : seed.velocityX,
+        velocityY: reduceMotion ? 0 : seed.velocityY,
+        resetting: false,
+      });
+    });
+
+    const restartFloating = () => {
+      motionStates.current.forEach((motion, href) => {
+        const index = services.findIndex((service) => service.href === href);
+        const seed = motionSeeds[index];
+        motion.velocityX = reduceMotion ? 0 : seed.velocityX;
+        motion.velocityY = reduceMotion ? 0 : seed.velocityY;
+      });
+    };
+
+    window.addEventListener(
+      "yellowtooths:preloader-complete",
+      restartFloating,
+    );
+
+    let animationFrame = 0;
+    let previousTime = performance.now();
+
+    const animate = (time: number) => {
+      const container = servicesRef.current;
+      const deltaTime = Math.min((time - previousTime) / 1000, 0.05);
+      previousTime = time;
+
+      if (container) {
+        const containerBounds = container.getBoundingClientRect();
+        const logoBounds = logoRef.current?.getBoundingClientRect();
+
+        motionStates.current.forEach((motion, href) => {
+          const item = itemRefs.current.get(href);
+          if (!item || dragState.current?.href === href) return;
+
+          if (motion.resetting) {
+            const returnSpeed = Math.min(1, deltaTime * 4.5);
+            motion.x += (0 - motion.x) * returnSpeed;
+            motion.y += (0 - motion.y) * returnSpeed;
+
+            if (Math.hypot(motion.x, motion.y) < 0.5) {
+              motion.x = 0;
+              motion.y = 0;
+              motion.resetting = false;
+            }
+          } else {
+            const previousX = motion.x;
+            const previousY = motion.y;
+            motion.x += motion.velocityX * deltaTime;
+            motion.y += motion.velocityY * deltaTime;
+
+            const itemBounds = item.getBoundingClientRect();
+            const baseLeft = itemBounds.left - previousX;
+            const baseTop = itemBounds.top - previousY;
+            const minX = containerBounds.left - baseLeft;
+            const maxX = containerBounds.right - baseLeft - itemBounds.width;
+            const minY = containerBounds.top - baseTop;
+            const maxY = containerBounds.bottom - baseTop - itemBounds.height;
+
+            if (motion.x <= minX || motion.x >= maxX) {
+              motion.x = Math.min(maxX, Math.max(minX, motion.x));
+              motion.velocityX *= -1;
+            }
+
+            if (motion.y <= minY || motion.y >= maxY) {
+              motion.y = Math.min(maxY, Math.max(minY, motion.y));
+              motion.velocityY *= -1;
+            }
+
+            if (logoBounds) {
+              const nextBounds = {
+                left: baseLeft + motion.x,
+                top: baseTop + motion.y,
+                right: baseLeft + motion.x + itemBounds.width,
+                bottom: baseTop + motion.y + itemBounds.height,
+              };
+
+              if (overlapsLogo(nextBounds, logoBounds)) {
+                const horizontalBounds = {
+                  ...nextBounds,
+                  top: baseTop + previousY,
+                  bottom: baseTop + previousY + itemBounds.height,
+                };
+                const verticalBounds = {
+                  ...nextBounds,
+                  left: baseLeft + previousX,
+                  right: baseLeft + previousX + itemBounds.width,
+                };
+
+                if (overlapsLogo(horizontalBounds, logoBounds)) {
+                  motion.x = previousX;
+                  motion.velocityX *= -1;
+                }
+
+                if (overlapsLogo(verticalBounds, logoBounds)) {
+                  motion.y = previousY;
+                  motion.velocityY *= -1;
+                }
+
+                if (
+                  motion.x !== previousX &&
+                  motion.y !== previousY
+                ) {
+                  motion.x = previousX;
+                  motion.y = previousY;
+                  motion.velocityX *= -1;
+                  motion.velocityY *= -1;
+                }
+              }
+            }
+          }
+
+          item.style.transform = `translate3d(${motion.x}px, ${motion.y}px, 0)`;
+        });
+      }
+
+      animationFrame = window.requestAnimationFrame(animate);
+    };
+
+    animationFrame = window.requestAnimationFrame(animate);
+
+    return () => {
+      window.cancelAnimationFrame(animationFrame);
+      window.removeEventListener(
+        "yellowtooths:preloader-complete",
+        restartFloating,
+      );
+    };
+  }, []);
+
+  const handlePointerDown = (
+    event: PointerEvent<HTMLLIElement>,
+    href: string,
+  ) => {
+    const container = servicesRef.current;
+    if (!container) return;
+
+    const itemBounds = event.currentTarget.getBoundingClientRect();
+    const motion = motionStates.current.get(href);
+    const initialPosition = motion
+      ? { x: motion.x, y: motion.y }
+      : { x: 0, y: 0 };
+
+    dragState.current = {
+      href,
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      initialPosition,
+      itemBounds,
+      hasMoved: false,
+    };
+  };
+
+  const handlePointerMove = (event: PointerEvent<HTMLLIElement>) => {
+    const drag = dragState.current;
+    const container = servicesRef.current;
+    if (!drag || !container || drag.pointerId !== event.pointerId) return;
+
+    const deltaX = event.clientX - drag.startX;
+    const deltaY = event.clientY - drag.startY;
+
+    if (!drag.hasMoved && Math.hypot(deltaX, deltaY) > 4) {
+      drag.hasMoved = true;
+      event.currentTarget.setPointerCapture(event.pointerId);
+      setDraggedService(drag.href);
+    }
+
+    if (!drag.hasMoved) return;
+
+    const containerBounds = container.getBoundingClientRect();
+    const boundedDeltaX = Math.min(
+      containerBounds.right - drag.itemBounds.right,
+      Math.max(containerBounds.left - drag.itemBounds.left, deltaX),
+    );
+    const boundedDeltaY = Math.min(
+      containerBounds.bottom - drag.itemBounds.bottom,
+      Math.max(containerBounds.top - drag.itemBounds.top, deltaY),
+    );
+    const nextPosition = {
+      x: drag.initialPosition.x + boundedDeltaX,
+      y: drag.initialPosition.y + boundedDeltaY,
+    };
+    const logoBounds = logoRef.current?.getBoundingClientRect();
+    const nextBounds = {
+      left: drag.itemBounds.left + boundedDeltaX,
+      top: drag.itemBounds.top + boundedDeltaY,
+      right: drag.itemBounds.right + boundedDeltaX,
+      bottom: drag.itemBounds.bottom + boundedDeltaY,
+    };
+
+    if (logoBounds && overlapsLogo(nextBounds, logoBounds)) return;
+
+    const motion = motionStates.current.get(drag.href);
+    if (motion) {
+      motion.x = nextPosition.x;
+      motion.y = nextPosition.y;
+      motion.resetting = false;
+    }
+
+    event.currentTarget.style.transform = `translate3d(${nextPosition.x}px, ${nextPosition.y}px, 0)`;
+  };
+
+  const finishDrag = (event: PointerEvent<HTMLLIElement>) => {
+    const drag = dragState.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+
+    if (drag.hasMoved) {
+      suppressClick.current = drag.href;
+      window.setTimeout(() => {
+        if (suppressClick.current === drag.href) suppressClick.current = null;
+      }, 0);
+    }
+
+    dragState.current = null;
+    setDraggedService(null);
+  };
+
   return (
     <section
       id="home-hero"
@@ -70,10 +356,13 @@ const HeroBanner = () => {
               width={4167}
               height={4167}
               priority
-              className="pointer-events-none absolute top-1/2 left-1/2 z-0 w-[clamp(9rem,20vw,18rem)] -translate-x-1/2 -translate-y-1/2"
+              className="pointer-events-none absolute top-1/2 left-1/2 z-0 w-[clamp(8rem,18vw,16rem)] -translate-x-1/2 -translate-y-1/2"
             />
 
-            <div className="pointer-events-none absolute top-1/2 left-1/2 z-0 w-[clamp(9rem,20vw,18rem)] -translate-x-1/2 -translate-y-1/2">
+            <div
+              ref={logoRef}
+              className="pointer-events-none absolute top-1/2 left-1/2 z-0 w-[clamp(8rem,18vw,16rem)] -translate-x-1/2 -translate-y-1/2"
+            >
               <Image
                 src="/logo-01.png"
                 alt=""
@@ -87,20 +376,53 @@ const HeroBanner = () => {
             <nav
               id="hero-services"
               aria-label="Services"
-              className="absolute top-1/2 right-0 left-0 z-10 h-[520px] -translate-y-1/2"
+              className="absolute inset-0 z-10"
+              onClick={(event) => {
+                if (!(event.target as HTMLElement).closest("li")) {
+                  motionStates.current.forEach((motion) => {
+                    motion.resetting = true;
+                  });
+                }
+              }}
             >
-              <ul className="relative h-full">
+              <ul ref={servicesRef} className="relative h-full">
                 {services.map((service) => (
                   <li
                     key={service.href}
-                    className={`absolute ${styles.serviceFloat} ${service.position}`}
+                    ref={(item) => {
+                      if (item) {
+                        itemRefs.current.set(service.href, item);
+                      } else {
+                        itemRefs.current.delete(service.href);
+                      }
+                    }}
+                    className={`absolute touch-none select-none ${styles.serviceItem} ${
+                      draggedService === service.href
+                        ? `z-20 cursor-grabbing ${styles.serviceDragging}`
+                        : "cursor-grab"
+                    } ${service.position}`}
+                    onPointerDown={(event) =>
+                      handlePointerDown(event, service.href)
+                    }
+                    onPointerMove={handlePointerMove}
+                    onPointerUp={finishDrag}
+                    onPointerCancel={finishDrag}
                   >
-                    <Link
-                      href={service.href}
-                      className="font-heading inline-block whitespace-nowrap text-[clamp(1.05rem,4.3vw,1.6rem)] capitalize text-white transition-colors hover:text-[#fec52d] focus-visible:text-[#fec52d] focus-visible:outline-none"
-                    >
-                      {service.label}
-                    </Link>
+                    <div>
+                      <Link
+                        href={service.href}
+                        draggable={false}
+                        onClick={(event) => {
+                          if (suppressClick.current === service.href) {
+                            event.preventDefault();
+                            suppressClick.current = null;
+                          }
+                        }}
+                        className="font-heading inline-block whitespace-nowrap text-[clamp(1.05rem,4.3vw,1.6rem)] capitalize text-white transition-colors hover:text-[#fec52d] focus-visible:text-[#fec52d] focus-visible:outline-none"
+                      >
+                        {service.label}
+                      </Link>
+                    </div>
                   </li>
                 ))}
               </ul>

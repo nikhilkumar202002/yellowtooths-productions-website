@@ -41,27 +41,42 @@ const Header = () => {
             : "relative"
         }`}
       >
-      <Container>
-        <div className="flex h-[60px] items-stretch">
-          <Link
-            href="/"
-            aria-label="Yellowtooths Productions home"
-            className="inline-flex min-w-0 flex-1 items-center pr-4 transition-opacity hover:opacity-80 sm:pr-6 lg:max-w-48 lg:pr-6"
-          >
-            <Image
-              src="/yellowtooths-wordmark.svg"
-              alt="Yellowtooths"
-              width={196}
-              height={31}
-              priority
-              className="h-auto w-28 sm:w-[130px]"
-            />
-          </Link>
+        <Container>
+          <div className="flex h-[60px] items-stretch">
+            <Link
+              href="/"
+              aria-label="Yellowtooths Productions home"
+              className="inline-flex min-w-0 flex-1 items-center pr-4 transition-opacity hover:opacity-80 sm:pr-6 lg:max-w-48 lg:pr-6"
+            >
+              {isPastHeader ? (
+                <span className="relative block h-11 w-[130px]">
+                  <Image
+                    src="/yellowtooths-wordmark.svg"
+                    alt="Yellowtooths"
+                    fill
+                    priority
+                    sizes="130px"
+                    className="object-contain object-left"
+                  />
+                </span>
+              ) : (
+                <span className="relative block h-11 w-[130px]">
+                  <Image
+                    src="/Yellowtooths.svg"
+                    alt="Yellowtooths"
+                    fill
+                    priority
+                    sizes="130px"
+                    className="object-contain object-left"
+                  />
+                </span>
+              )}
+            </Link>
 
-          <nav
-            aria-label="Main navigation"
-            className="hidden shrink-0 items-stretch border-l border-white/15 lg:flex"
-          >
+            <nav
+              aria-label="Main navigation"
+              className="hidden shrink-0 items-stretch border-l border-white/15 lg:flex"
+            >
             {[
               { href: "/", label: "Home" },
               { href: "/works", label: "Works" },
@@ -73,7 +88,7 @@ const Header = () => {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="font-description flex items-center px-5 text-xs font-medium capitalize tracking-[0.04em] text-white/60 transition-colors hover:text-white xl:px-4"
+                  className="font-heading flex items-center px-5 text-xs font-medium capitalize tracking-[0.04em] text-white/60 transition-colors hover:text-white xl:px-4"
                 >
                   {item.label}
                 </Link>
@@ -88,18 +103,18 @@ const Header = () => {
               <Link
                 key={item.href}
                 href={item.href}
-                className="font-description flex items-center px-5 text-xs font-medium capitalize tracking-[0.04em] text-white/60 transition-colors hover:text-white xl:px-4"
+                className="font-heading flex items-center px-5 text-xs font-medium capitalize tracking-[0.04em] text-white/60 transition-colors hover:text-white xl:px-4"
               >
                 {item.label}
               </Link>
             ))}
-          </nav>
+            </nav>
 
-          <form
-            role="search"
-            action="/"
-            className="hidden min-w-0 flex-1 items-center border-l border-white/15 md:flex"
-          >
+            <form
+              role="search"
+              action="/"
+              className="hidden min-w-0 flex-1 items-center border-l border-white/15 md:flex"
+            >
             <label htmlFor="site-search" className="sr-only">
               Search
             </label>
@@ -108,9 +123,9 @@ const Header = () => {
               name="q"
               type="search"
               placeholder="Search"
-              className="site-search font-description h-full w-full bg-transparent px-5 text-xs capitalize tracking-[0.04em] text-white outline-none placeholder:text-white/45 focus:bg-white/[0.04] lg:px-8"
+              className="site-search font-heading h-full w-full bg-transparent px-5 text-xs capitalize tracking-[0.04em] text-white outline-none placeholder:text-white/45 focus:bg-white/[0.04] lg:px-8"
             />
-          </form>
+            </form>
 
           <button
             type="button"
@@ -141,7 +156,7 @@ const Header = () => {
 
           <Link
             href="/contact"
-            className="font-description group flex shrink-0 items-center justify-center gap-2 border-l border-white/15 px-4 text-xs font-medium capitalize tracking-[0.04em] text-white/60 transition-colors hover:bg-[#fec52d] hover:text-black sm:gap-3 sm:px-7 lg:min-w-52"
+            className="font-heading group flex shrink-0 items-center justify-center gap-2 border-l border-white/15 px-4 text-xs font-medium capitalize tracking-[0.04em] text-white/60 transition-colors hover:bg-[#fec52d] hover:text-black sm:gap-3 sm:px-7 lg:min-w-52"
           >
             <span className="hidden sm:inline">Contact us</span>
             <svg
@@ -159,8 +174,8 @@ const Header = () => {
               />
             </svg>
           </Link>
-        </div>
-      </Container>
+          </div>
+        </Container>
       </header>
     </div>
   );

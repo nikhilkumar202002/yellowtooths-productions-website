@@ -38,6 +38,7 @@ const Preloader = () => {
       const timeline = gsap.timeline({
         onComplete: () => {
           document.body.style.overflow = previousOverflow;
+          window.dispatchEvent(new Event("yellowtooths:preloader-complete"));
           setHasFinished(true);
         },
       });
@@ -109,7 +110,7 @@ const Preloader = () => {
       <svg
         ref={logoRef}
         viewBox="0 0 713.55 352.04"
-        className="h-auto w-[min(58vw,360px)] scale-[0.92] opacity-0"
+        className="h-auto w-[min(48vw,260px)] scale-[0.92] opacity-0"
         aria-hidden="true"
       >
         <g fill="#fec52d">
