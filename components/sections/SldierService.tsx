@@ -1,12 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import {
-  useEffect,
-  useRef,
-  useState,
-  type PointerEvent,
-} from "react";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Container from "@/components/common/Container";
@@ -82,19 +78,10 @@ const services = [
 
 const SliderService = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [progress, setProgress] = useState(0);
   const sectionRef = useRef<HTMLElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
   const cardRefs = useRef<Array<HTMLElement | null>>([]);
   const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
-
-  const updateProgress = () => {
-    const track = trackRef.current;
-    if (!track) return;
-
-    const scrollableWidth = track.scrollWidth - track.clientWidth;
-    setProgress(scrollableWidth > 0 ? track.scrollLeft / scrollableWidth : 0);
-  };
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -131,10 +118,7 @@ const SliderService = () => {
         const getMaxScroll = () =>
           Math.max(0, track.scrollWidth - track.clientWidth);
         const syncTrack = (scrollTrigger: ScrollTrigger) => {
-          const nextProgress = scrollTrigger.progress;
-
-          track.scrollLeft = getMaxScroll() * nextProgress;
-          setProgress(nextProgress);
+          track.scrollLeft = getMaxScroll() * scrollTrigger.progress;
         };
 
         scrollTriggerRef.current = ScrollTrigger.create({
@@ -144,7 +128,7 @@ const SliderService = () => {
             `+=${Math.max(getMaxScroll(), window.innerHeight * 0.75)}`,
           pin: true,
           pinSpacing: true,
-          scrub: 0.8,
+          scrub: 0.35,
           anticipatePin: 1,
           invalidateOnRefresh: true,
           onUpdate: syncTrack,
@@ -164,13 +148,11 @@ const SliderService = () => {
     );
 
     observer.observe(section);
-    updateProgress();
 
     const resizeObserver = new ResizeObserver(() => {
-      updateProgress();
       ScrollTrigger.refresh();
     });
-    resizeObserver.observe(track);
+    resizeObserver.observe(section);
 
     return () => {
       observer.disconnect();
@@ -209,52 +191,45 @@ const SliderService = () => {
     });
   };
 
-  const handlePointerLight = (
-    event: PointerEvent<HTMLElement>,
-    index: number,
-  ) => {
-    const bounds = event.currentTarget.getBoundingClientRect();
-    event.currentTarget.style.setProperty(
-      "--pointer-x",
-      `${event.clientX - bounds.left}px`,
-    );
-    event.currentTarget.style.setProperty(
-      "--pointer-y",
-      `${event.clientY - bounds.top}px`,
-    );
-    setActiveIndex(index);
-  };
-
   return (
     <section
       ref={sectionRef}
-      className="flex min-h-[100svh] flex-col justify-center overflow-hidden border-b border-white/15 bg-[#050505] py-14 text-white sm:py-20"
+      className="flex min-h-[100svh] flex-col justify-center overflow-x-hidden border-b border-white/15 bg-[#050505] py-14 text-white sm:py-20"
       aria-labelledby="service-showcase-title"
     >
       <Container>
-        <div className="flex flex-col gap-8 border-b border-white/15 pb-10 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="font-description text-xs uppercase tracking-[0.18em] text-[#fec52d]">
-              What we create
-            </p>
-            <h2
-              id="service-showcase-title"
-              className="font-heading mt-4 max-w-3xl text-[clamp(2.5rem,6vw,6rem)] leading-[0.9] tracking-[-0.065em]"
-            >
-              Capabilities in motion.
-            </h2>
-          </div>
+        <div className="flex items-end justify-between gap-6">
+          <h2
+            id="service-showcase-title"
+            className="font-heading max-w-2xl text-2xl capitalize leading-none tracking-[-0.05em] sm:text-4xl"
+          >
+            Our Services
+          </h2>
 
-          <p className="font-description max-w-sm text-sm leading-6 text-white/45">
-            Scroll to explore the disciplines we bring together.
-          </p>
+          <Link
+            href="/#hero-services"
+            className="font-description group flex shrink-0 items-center gap-2 text-xs font-medium uppercase tracking-[0.08em] text-white/60 transition-colors hover:text-white"
+          >
+            Explore services
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+              className="size-4 transition-transform duration-200 group-hover:translate-x-1"
+            >
+              <path
+                d="M5 12h14m-5-5 5 5-5 5"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              />
+            </svg>
+          </Link>
         </div>
       </Container>
 
       <div
         ref={trackRef}
         className={styles.track}
-        onScroll={updateProgress}
         onKeyDown={handleKeyDown}
         tabIndex={0}
         aria-label="Service showcase"
@@ -274,8 +249,6 @@ const SliderService = () => {
               className={`${styles.card} ${
                 isActive ? styles.activeCard : ""
               } ${isDimmed ? styles.dimmedCard : ""}`}
-              style={{ "--accent": service.accent } as React.CSSProperties}
-              onPointerMove={(event) => handlePointerLight(event, index)}
               onPointerEnter={() => setActiveIndex(index)}
               onPointerLeave={() => setActiveIndex(null)}
               onFocusCapture={() => setActiveIndex(index)}
@@ -294,8 +267,6 @@ const SliderService = () => {
                   className={styles.image}
                 />
               </div>
-
-              <div className={styles.light} aria-hidden="true" />
               <div className={styles.scrim} aria-hidden="true" />
 
               <div className={styles.content}>
@@ -314,12 +285,6 @@ const SliderService = () => {
 
         <div className={styles.trailingSpace} aria-hidden="true" />
       </div>
-
-      <Container>
-        <div className={styles.progress} aria-hidden="true">
-          <span style={{ transform: `scaleX(${progress})` }} />
-        </div>
-      </Container>
     </section>
   );
 };

@@ -78,7 +78,7 @@ const FilmPosterDetailPage = async ({
 
   return (
     <main className="min-h-screen bg-black text-white">
-      <section className="border-b border-white/15 py-8 sm:py-12">
+      <section className="border-b border-white/15 py-8 sm:py-6">
         <Container>
           <Link
             href="/services/film-poster"
@@ -184,21 +184,22 @@ const FilmPosterDetailPage = async ({
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 sm:gap-5 lg:grid-cols-3">
+            <div className="columns-3 gap-2 sm:gap-5">
               {galleryImages.map((image, index) => (
-                <div
+                <figure
                   key={image.id}
-                  className="relative aspect-[2/3] overflow-hidden rounded-lg bg-white/5 sm:rounded-2xl"
+                  className="mb-3 break-inside-avoid overflow-hidden rounded-lg bg-white/5 sm:mb-5 sm:rounded-2xl"
                 >
-                  <Image
+                  {/* The API does not provide dimensions, so a native image preserves its natural ratio. */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
                     src={image.file_path}
                     alt={`${poster.film_name} poster exploration ${index + 1}`}
-                    fill
-                    sizes="(max-width: 639px) 50vw, (max-width: 1023px) 50vw, 33vw"
-                    unoptimized
-                    className="object-cover transition duration-500 hover:scale-[1.015]"
+                    loading="lazy"
+                    decoding="async"
+                    className="block h-auto w-full transition duration-500 hover:scale-[1.015]"
                   />
-                </div>
+                </figure>
               ))}
             </div>
           </Container>
